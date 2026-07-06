@@ -131,30 +131,54 @@ if (contactForm && submitBtn && feedbackMsg) {
 
         // Disable button & show sending state
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Redirecting to Mail...';
-        feedbackMsg.className = 'form-feedback success';
-        feedbackMsg.textContent = 'Opening your email application...';
+        submitBtn.textContent = 'Sending Message...';
+        feedbackMsg.className = 'form-feedback';
+        feedbackMsg.textContent = '';
 
-        setTimeout(() => {
-            // Create mailto link
-            const subject = `Portfolio Contact from ${name}`;
-            const body = `${message}\n\n---\nSent from Portfolio Website\nSender Email: ${email}`;
-            
-            window.location.href = `mailto:ethanyapschool@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
+        // Submit via FormSubmit AJAX API
+        fetch("https://formsubmit.co/ajax/ethanyapschool@gmail.com", {
+            method: "POST",
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                message: message
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
             submitBtn.disabled = false;
             submitBtn.textContent = 'Send Message';
-            feedbackMsg.textContent = 'Email client opened! Please send the drafted email.';
             
-            // Reset form fields
-            contactForm.reset();
+            if (data.success === "true" || data.success === true) {
+                feedbackMsg.className = 'form-feedback success';
+                feedbackMsg.textContent = 'Thank you! Your message has been sent successfully.';
+                contactForm.reset();
+            } else {
+                feedbackMsg.className = 'form-feedback error';
+                feedbackMsg.textContent = 'Oops! Something went wrong. Please try again.';
+            }
 
             // Clear message after 5 seconds
             setTimeout(() => {
                 feedbackMsg.textContent = '';
                 feedbackMsg.className = 'form-feedback';
             }, 5000);
-        }, 800);
+        })
+        .catch(error => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send Message';
+            feedbackMsg.className = 'form-feedback error';
+            feedbackMsg.textContent = 'Network error. Please check your connection and try again.';
+            
+            setTimeout(() => {
+                feedbackMsg.textContent = '';
+                feedbackMsg.className = 'form-feedback';
+            }, 5000);
+        });
     });
 }
 
