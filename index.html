@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio of Yap Kai Jun Ethan, IT Student & Aspiring Web/Mobile Developer at Singapore Polytechnic minoring in Business. Creator of the 7-Day Buffer Rule.">
+    <title>Yap Kai Jun Ethan | Scholarship Portfolio</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo" id="nav-logo-link">
+                <span class="logo-accent">Ethan</span>.dev
+            </a>
+            <nav class="nav-menu" id="nav-menu-bar">
+                <a href="#about" class="nav-link">About</a>
+                <a href="#buffer-rule" class="nav-link">The 7-Day Buffer</a>
+                <a href="#skills" class="nav-link">Skills & Focus</a>
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#value" class="nav-link">Value</a>
+                <a href="#contact" class="nav-link nav-btn-primary">Contact</a>
+            </nav>
+            <button class="mobile-toggle" id="mobile-nav-toggle" aria-label="Toggle Navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        
+        <!-- Hero Section -->
+        <section id="about" class="hero-section">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <div class="badge-container">
+                        <span class="badge" id="student-badge"><i class="fa-solid fa-graduation-cap"></i> Singapore Polytechnic IT Student</span>
+                        <span class="badge badge-accent" id="minor-badge"><i class="fa-solid fa-chart-line"></i> Business Minor</span>
+                    </div>
+                    <h1 class="hero-title">
+                        Bridging Technical Code with <span class="text-highlight">Business Strategy</span>
+                    </h1>
+                    <p class="hero-description">
+                        I am a Year 2 Information Technology student minoring in Business at Singapore Polytechnic. As an aspiring web and mobile developer, I design reliable, high-performance software driven by strategic execution.
+                    </p>
+                    <div class="hero-cta">
+                        <a href="#projects" class="btn btn-primary" id="view-projects-btn">Explore Projects</a>
+                        <a href="#buffer-rule" class="btn btn-secondary" id="learn-buffer-btn">The 7-Day Buffer Rule</a>
+                    </div>
+                </div>
+                <div class="hero-graphic">
+                    <div class="glass-card-wrapper">
+                        <div class="glass-card" id="hero-card-1">
+                            <div class="card-dot-decorations">
+                                <span class="card-dot dot-red"></span>
+                                <span class="card-dot dot-yellow"></span>
+                                <span class="card-dot dot-green"></span>
+                            </div>
+                            <div class="card-code-block">
+                                <span class="code-comment">// Meticulous Code Submission</span>
+                                <p><span class="code-keyword">const</span> developer = {</p>
+                                <p class="code-indent">name: <span class="code-string">"Ethan Yap"</span>,</p>
+                                <p class="code-indent">discipline: <span class="code-string">"7-Day Buffer Rule"</span>,</p>
+                                <p class="code-indent">skills: [<span class="code-string">"Java"</span>, <span class="code-string">"JS"</span>, <span class="code-string">"CSS"</span>, <span class="code-string">"HTML"</span>],</p>
+                                <p class="code-indent">underPressure: <span class="code-boolean">true</span></p>
+                                <p>};</p>
+                            </div>
+                        </div>
+                        <div class="glass-card card-overlay" id="hero-card-2">
+                            <div class="stat-row">
+                                <div class="stat-item">
+                                    <span class="stat-number">7-Day</span>
+                                    <span class="stat-label">Buffer Guarantee</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">100%</span>
+                                    <span class="stat-label">On-Time Submissions</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <a href="#buffer-rule" aria-label="Scroll down"><i class="fa-solid fa-chevron-down scroll-bounce"></i></a>
+            </div>
+        </section>
+
+        <!-- The 7-Day Buffer Rule Section -->
+        <section id="buffer-rule" class="section buffer-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">MY CORE METHODOLOGY</span>
+                    <h2 class="section-title">The 7-Day Buffer Rule</h2>
+                    <p class="section-description">
+                        To ensure industry-grade quality, I adhere to a strict personal development timeline. I deliver the working version of my software projects seven days before the official deadline, giving me a full week to refine the code.
+                    </p>
+                </div>
+
+                <div class="timeline-interactive">
+                    <div class="timeline-progress">
+                        <div class="timeline-bar" id="active-timeline-bar"></div>
+                    </div>
+                    <div class="timeline-nodes">
+                        <!-- Node 1 -->
+                        <div class="timeline-node active" data-day="7" id="node-day-7">
+                            <div class="node-circle"><i class="fa-solid fa-code"></i></div>
+                            <span class="node-title">7 Days Before</span>
+                            <span class="node-desc">Working Version Ready</span>
+                        </div>
+                        <!-- Node 2 -->
+                        <div class="timeline-node" data-day="5" id="node-day-5">
+                            <div class="node-circle"><i class="fa-solid fa-bug-slash"></i></div>
+                            <span class="node-title">5 Days Before</span>
+                            <span class="node-desc">Edge Cases & Bugs</span>
+                        </div>
+                        <!-- Node 3 -->
+                        <div class="timeline-node" data-day="3" id="node-day-3">
+                            <div class="node-circle"><i class="fa-solid fa-gauge-high"></i></div>
+                            <span class="node-title">3 Days Before</span>
+                            <span class="node-desc">Code Optimization</span>
+                        </div>
+                        <!-- Node 4 -->
+                        <div class="timeline-node" data-day="1" id="node-day-1">
+                            <div class="node-circle"><i class="fa-solid fa-file-shield"></i></div>
+                            <span class="node-title">1 Day Before</span>
+                            <span class="node-desc">Final logic check</span>
+                        </div>
+                        <!-- Node 5 -->
+                        <div class="timeline-node" data-day="0" id="node-day-0">
+                            <div class="node-circle"><i class="fa-solid fa-circle-check"></i></div>
+                            <span class="node-title">Deadline Day</span>
+                            <span class="node-desc">Perfect Delivery</span>
+                        </div>
+                    </div>
+
+                    <!-- Timeline details panel -->
+                    <div class="timeline-details-panel" id="timeline-details-box">
+                        <h3 class="details-title" id="details-box-title">7 Days Before Deadline: Core Working Code</h3>
+                        <p class="details-text" id="details-box-text">
+                            Features are fully programmed and functional. I complete the main logical architecture of the application by this stage, establishing a secure baseline.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Academic & Professional Focus (Skills) Section -->
+        <section id="skills" class="section skills-section">
+            <div class="container">
+                <div class="skills-grid">
+                    <div class="skills-info">
+                        <span class="section-subtitle">SKILLS & COMPETENCIES</span>
+                        <h2 class="section-title">Bridging Code and Organization</h2>
+                        <p class="skills-description">
+                            My academic career at Singapore Polytechnic, coupled with a rigorous minor in Business, enables me to develop solutions that are not just technically sound, but also align with commercial goals and user requirements.
+                        </p>
+                        
+                        <div class="skills-tags">
+                            <div class="skill-tag" id="skill-java"><i class="fa-brands fa-java text-orange"></i> Java</div>
+                            <div class="skill-tag" id="skill-js"><i class="fa-brands fa-js text-yellow"></i> JavaScript</div>
+                            <div class="skill-tag" id="skill-html"><i class="fa-brands fa-html5 text-red"></i> HTML5</div>
+                            <div class="skill-tag" id="skill-css"><i class="fa-brands fa-css3-alt text-blue"></i> CSS3</div>
+                            <div class="skill-tag" id="skill-git"><i class="fa-brands fa-git-alt text-red"></i> Git Version Control</div>
+                            <div class="skill-tag" id="skill-ui"><i class="fa-solid fa-mobile-screen-button text-purple"></i> Web & Mobile Dev</div>
+                        </div>
+                    </div>
+
+                    <div class="focus-cards">
+                        <!-- Card 1 -->
+                        <div class="focus-card" id="focus-tech">
+                            <div class="focus-icon"><i class="fa-solid fa-laptop-code"></i></div>
+                            <h3>Technical Frameworks</h3>
+                            <p>Proven ability to build responsive frontends and reliable backends. Hardworking and dedicated to rapid trial-and-error prototyping coupled with meticulous cleanup.</p>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="focus-card" id="focus-business">
+                            <div class="focus-icon"><i class="fa-solid fa-briefcase"></i></div>
+                            <h3>Business Context</h3>
+                            <p>Minoring in Business helps me model application structures around organizational pipelines, resource constraints, and user experience outcomes.</p>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="focus-card" id="focus-service">
+                            <div class="focus-icon"><i class="fa-solid fa-comments"></i></div>
+                            <h3>Service Experience</h3>
+                            <p>Honed soft skills, communication, and fast problem-solving in high-pressure service environments. I thrive when delivering solutions under tight constraints.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section projects-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">PORTFOLIO PROJECTS</span>
+                    <h2 class="section-title">Academic & Personal Showcase</h2>
+                    <p class="section-description">
+                        Below is a selection of projects built during my time at Singapore Polytechnic, showcasing my adherence to rigorous engineering standards.
+                    </p>
+                </div>
+
+                <div class="projects-grid">
+                    <!-- Project 1 -->
+                    <div class="project-card" id="project-pokemon">
+                        <div class="project-img-placeholder">
+                            <i class="fa-solid fa-gamepad project-icon-large"></i>
+                        </div>
+                        <div class="project-details">
+                            <span class="project-tag">Full-Stack Application</span>
+                            <h3>Pokémon Gym & Battle System</h3>
+                            <p>A complete full-stack web application with secure JWT/bcrypt authentication. Features a Pokémon shop, team management, and a multi-turn turn-based battle engine.</p>
+                            <div class="project-tech-used">
+                                <span>Node.js</span>
+                                <span>Express</span>
+                                <span>MySQL</span>
+                                <span>JWT Auth</span>
+                            </div>
+                            <div>
+                                <a href="https://github.com/EthanYap123/pokemon-gamified-battle-system" target="_blank" class="btn btn-secondary btn-sm">
+                                    <i class="fa-brands fa-github"></i> View Repo
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="project-card" id="project-wellness">
+                        <div class="project-img-placeholder">
+                            <i class="fa-solid fa-heart-pulse project-icon-large"></i>
+                        </div>
+                        <div class="project-details">
+                            <span class="project-tag">Front-End Development</span>
+                            <h3>Mental Wellness Hub</h3>
+                            <p>A responsive frontend educational wellness portal. Educates users on stress management techniques and features an interactive mental health check-in form.</p>
+                            <div class="project-tech-used">
+                                <span>HTML5</span>
+                                <span>CSS3</span>
+                                <span>Bootstrap 5</span>
+                                <span>JavaScript</span>
+                            </div>
+                            <div>
+                                <a href="https://github.com/EthanYap123/mental-wellness-hub" target="_blank" class="btn btn-secondary btn-sm">
+                                    <i class="fa-brands fa-github"></i> View Repo
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div class="project-card" id="project-retail">
+                        <div class="project-img-placeholder">
+                            <i class="fa-solid fa-receipt project-icon-large"></i>
+                        </div>
+                        <div class="project-details">
+                            <span class="project-tag">Full-Stack Utility</span>
+                            <h3>Retail Transaction WebApp</h3>
+                            <p>A data filtering web app using modular vanilla JS web components on the frontend. Connects to a Node.js/Express backend serving mock retail records.</p>
+                            <div class="project-tech-used">
+                                <span>JavaScript</span>
+                                <span>Web Components</span>
+                                <span>Node.js</span>
+                                <span>Express</span>
+                            </div>
+                            <div>
+                                <a href="https://github.com/EthanYap123/retail-transaction-webapp" target="_blank" class="btn btn-secondary btn-sm">
+                                    <i class="fa-brands fa-github"></i> View Repo
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scholarship Value Proposition Section -->
+        <section id="value" class="section value-section">
+            <div class="container">
+                <div class="value-wrapper">
+                    <div class="value-visual">
+                        <div class="floating-values">
+                            <div class="val-card val-card-1" id="val-resilience">
+                                <span class="val-icon"><i class="fa-solid fa-bolt"></i></span>
+                                <span>Under-Pressure Resilience</span>
+                            </div>
+                            <div class="val-card val-card-2" id="val-discipline">
+                                <span class="val-icon"><i class="fa-solid fa-shield"></i></span>
+                                <span>Disciplined 7-Day Cycle</span>
+                            </div>
+                            <div class="val-card val-card-3" id="val-communication">
+                                <span class="val-icon"><i class="fa-solid fa-people-arrows"></i></span>
+                                <span>Professional Soft Skills</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="value-content">
+                        <span class="section-subtitle">SCHOLARSHIP VALUE PROPOSITION</span>
+                        <h2 class="section-title">Why I am a Strong Candidate</h2>
+                        <p>
+                            As a Singapore Polytechnic IT student, I focus on delivering more than just functional code. I develop solutions with structural integrity and alignment with user-centric strategies.
+                        </p>
+                        <div class="value-points">
+                            <div class="value-point" id="vp-buffer">
+                                <div class="vp-check"><i class="fa-solid fa-check"></i></div>
+                                <div>
+                                    <h4>The 7-Day Buffer Rule</h4>
+                                    <p>I eliminate delivery risks. By finishing early, I have ample time for edge-case checks and refactoring, ensuring high-quality submissions.</p>
+                                </div>
+                            </div>
+                            <div class="value-point" id="vp-comms">
+                                <div class="vp-check"><i class="fa-solid fa-check"></i></div>
+                                <div>
+                                    <h4>A Multi-Disciplinary Edge</h4>
+                                    <p>Minoring in Business means I can communicate with both engineering departments and strategic stakeholders, facilitating smooth collaborative execution.</p>
+                                </div>
+                            </div>
+                            <div class="value-point" id="vp-resilience">
+                                <div class="vp-check"><i class="fa-solid fa-check"></i></div>
+                                <div>
+                                    <h4>Under-Pressure Adaptation</h4>
+                                    <p>Honed by high-volume service roles, I handle stress constructively and adapt to changes, maintaining momentum under demanding conditions.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section contact-section">
+            <div class="container">
+                <div class="contact-card">
+                    <div class="contact-info-panel">
+                        <h3>Connect with Ethan</h3>
+                        <p>If you're looking for a disciplined developer for internships, collaborations, or scholarship opportunities, feel free to reach out.</p>
+                        
+                        <div class="contact-details-list">
+                            <div class="contact-item">
+                                <span class="icon"><i class="fa-solid fa-envelope"></i></span>
+                                <span>ethanyapschool@gmail.com</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="icon"><i class="fa-solid fa-location-dot"></i></span>
+                                <span>Singapore</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="icon"><i class="fa-brands fa-linkedin-in"></i></span>
+                                <span>linkedin.com/in/yap-kai-jun-ethan</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form class="contact-form" id="portfolio-contact-form" onsubmit="event.preventDefault();">
+                        <div class="form-group">
+                            <label for="contact-name">Full Name</label>
+                            <input type="text" id="contact-name" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-email">Email Address</label>
+                            <input type="email" id="contact-email" placeholder="john@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-message">Message</label>
+                            <textarea id="contact-message" rows="4" placeholder="Let's connect..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full" id="contact-submit-btn">Send Message</button>
+                        <div id="form-feedback-message" class="form-feedback"></div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2026 Yap Kai Jun Ethan. All Rights Reserved. Built with strict 7-Day Buffer discipline.</p>
+            <div class="footer-socials">
+                <a href="https://linkedin.com/in/yap-kai-jun-ethan" target="_blank" class="footer-social-link" id="footer-linkedin-link" aria-label="LinkedIn Profile"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="https://github.com/EthanYap123" target="_blank" class="footer-social-link" id="footer-github-link" aria-label="GitHub Profile"><i class="fa-brands fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom Script -->
+    <script src="script.js"></script>
+</body>
+</html>
