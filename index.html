@@ -362,18 +362,23 @@
                         </div>
                     </div>
 
-                    <form class="contact-form" id="portfolio-contact-form" onsubmit="event.preventDefault();">
+                    <form class="contact-form" id="portfolio-contact-form" action="https://formsubmit.co/ethanyapschool@gmail.com" method="POST">
+                        <!-- Redirect back to the portfolio after submission -->
+                        <input type="hidden" name="_next" value="https://ethanyap123.github.io/portfolio/">
+                        <!-- Disable captcha screen for a cleaner flow (optional, but requires email activation) -->
+                        <input type="hidden" name="_captcha" value="false">
+                        
                         <div class="form-group">
                             <label for="contact-name">Full Name</label>
-                            <input type="text" id="contact-name" placeholder="John Doe" required>
+                            <input type="text" name="name" id="contact-name" placeholder="John Doe" required>
                         </div>
                         <div class="form-group">
                             <label for="contact-email">Email Address</label>
-                            <input type="email" id="contact-email" placeholder="john@example.com" required>
+                            <input type="email" name="email" id="contact-email" placeholder="john@example.com" required>
                         </div>
                         <div class="form-group">
                             <label for="contact-message">Message</label>
-                            <textarea id="contact-message" rows="4" placeholder="Let's connect..." required></textarea>
+                            <textarea name="message" id="contact-message" rows="4" placeholder="Let's connect..." required></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary btn-full" id="contact-submit-btn">Send Message</button>
                         <div id="form-feedback-message" class="form-feedback"></div>

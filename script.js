@@ -116,71 +116,8 @@ if (timelineNodes.length > 0 && timelineBar && detailsTitle && detailsText) {
     updateTimeline("7");
 }
 
-// --- CONTACT FORM SUBMISSION FEEDBACK ---
-const contactForm = document.getElementById('portfolio-contact-form');
-const submitBtn = document.getElementById('contact-submit-btn');
-const feedbackMsg = document.getElementById('form-feedback-message');
-
-if (contactForm && submitBtn && feedbackMsg) {
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const name = document.getElementById('contact-name').value;
-        const email = document.getElementById('contact-email').value;
-        const message = document.getElementById('contact-message').value;
-
-        // Disable button & show sending state
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Sending Message...';
-        feedbackMsg.className = 'form-feedback';
-        feedbackMsg.textContent = '';
-
-        // Submit via FormSubmit AJAX API
-        fetch("https://formsubmit.co/ajax/ethanyapschool@gmail.com", {
-            method: "POST",
-            headers: { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                name: name,
-                email: email,
-                message: message
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Send Message';
-            
-            if (data.success === "true" || data.success === true) {
-                feedbackMsg.className = 'form-feedback success';
-                feedbackMsg.textContent = 'Thank you! Your message has been sent successfully.';
-                contactForm.reset();
-            } else {
-                feedbackMsg.className = 'form-feedback error';
-                feedbackMsg.textContent = 'Oops! Something went wrong. Please try again.';
-            }
-
-            // Clear message after 5 seconds
-            setTimeout(() => {
-                feedbackMsg.textContent = '';
-                feedbackMsg.className = 'form-feedback';
-            }, 5000);
-        })
-        .catch(error => {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Send Message';
-            feedbackMsg.className = 'form-feedback error';
-            feedbackMsg.textContent = 'Network error. Please check your connection and try again.';
-            
-            setTimeout(() => {
-                feedbackMsg.textContent = '';
-                feedbackMsg.className = 'form-feedback';
-            }, 5000);
-        });
-    });
-}
+// --- CONTACT FORM SUBMISSION ---
+// Form submissions are handled natively via POST to FormSubmit.co. No JavaScript override needed.
 
 // --- ENTRANCE ANIMATION (SCROLL OBSERVER) ---
 // Add simple class transitions to make elements feel alive
