@@ -18,4 +18,4 @@ python -m http.server 8174
 
 ## Contact
 
-yap.k.j.ethan@gmail.com · [LinkedIn](https://www.linkedin.com/in/yap-kai-jun-ethan/) · [GitHub](https://github.com/EthanYap123)
+ethanyapschool@gmail.com · [LinkedIn](https://www.linkedin.com/in/yap-kai-jun-ethan/) · [GitHub](https://github.com/EthanYap123)
