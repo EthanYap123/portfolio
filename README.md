@@ -4,11 +4,11 @@ Personal portfolio of Ethan Yap, Year 2 Information Technology student at Singap
 
 **Live site:** https://ethanyap123.github.io/portfolio/
 
-It covers my projects (each with a live demo and source), toolkit, education, experience and a downloadable [resume](assets/Ethan-Yap-Resume.pdf).
+It covers my projects (live demos, source code and what each one taught me), skills, how I work, education, experience and a downloadable [resume](assets/Ethan-Yap-Resume.pdf).
 
 ## Built with
 
-A single static `index.html`: hand-written HTML and CSS with a little vanilla JavaScript, no framework and no build step. Projects are rendered from one data array, and the site is served by GitHub Pages from `main`.
+A single static `index.html`: HTML and CSS with a little vanilla JavaScript, no framework and no build step. Projects and skills are rendered from small data arrays, and the site is served by GitHub Pages from `main`.
 
 Run it locally with any static server, for example:
 
