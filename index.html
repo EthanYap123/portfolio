@@ -245,24 +245,81 @@ a.frame:hover img { transform: scale(1.02); }
 .about-facts dd { margin: 0; font-size: 16px; font-weight: 500; }
 
 /* How I work */
-.how { margin-bottom: var(--section-gap); padding: clamp(28px,5vw,56px); border-radius: 28px; background: var(--ink); color: var(--bg); display: flex; flex-direction: column; gap: clamp(32px,4vw,48px); }
+.how { --rule: rgba(245,242,236,.14); margin-bottom: var(--section-gap); padding: clamp(24px,5vw,56px); border-radius: 28px; background: var(--ink); color: var(--bg); display: flex; flex-direction: column; gap: clamp(28px,4vw,44px); }
 .how .label { color: var(--accent-soft); }
 .how h2 { margin: 12px 0 0; font-family: var(--serif); font-weight: 400; font-size: clamp(38px,4.6vw,56px); line-height: 1; letter-spacing: -.015em; }
-.how h3 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(26px,2.6vw,32px); line-height: 1.05; }
 .how p { margin: 0; font-size: 16px; line-height: 1.6; color: var(--on-dark); text-wrap: pretty; }
-.habit-num { font-family: var(--mono); font-size: 12px; color: var(--accent-soft); }
-.rule { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,320px),1fr)); gap: 28px clamp(32px,5vw,64px); align-items: center; padding-bottom: clamp(32px,4vw,48px); border-bottom: 1px solid rgba(245,242,236,.14); }
-.rule > div:first-child { display: flex; flex-direction: column; gap: 12px; }
-.rule p { max-width: 30em; }
-.days-wrap { display: flex; flex-direction: column; gap: 14px; }
+.how-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px 32px; flex-wrap: wrap; }
+.how-body { display: grid; grid-template-columns: minmax(0,1fr); gap: 24px; }
+@media (min-width: 900px) { .how-body { grid-template-columns: minmax(0,5fr) minmax(0,7fr); gap: 48px; align-items: start; } .habit-panel { min-height: 380px; } }
+.habit-tabs { display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
+.habit-tabs button { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: baseline; gap: 16px; padding: 18px 6px; border-bottom: 1px solid var(--rule); color: rgba(245,242,236,.5); font-family: var(--serif); font-size: clamp(22px,2.4vw,30px); line-height: 1.1; transition: color .2s, padding .25s, box-shadow .25s; }
+.habit-tabs button:hover { color: var(--bg); }
+.habit-tabs button[aria-selected="true"] { color: var(--bg); padding-left: 18px; box-shadow: inset 3px 0 0 var(--accent-soft); }
+.habit-tabs button:focus-visible { outline: 2px solid var(--accent-soft); outline-offset: -2px; border-radius: 4px; }
+.habit-num { flex: none; font-family: var(--mono); font-size: 12px; color: var(--accent-soft); }
+.habit-panel { display: flex; flex-direction: column; gap: 22px; padding: clamp(20px,3vw,32px); border-radius: 20px; background: rgba(245,242,236,.05); border: 1px solid rgba(245,242,236,.1); }
+.habit-panel[hidden] { display: none; }
+.habit-panel:focus-visible { outline: 2px solid var(--accent-soft); outline-offset: 2px; }
+.habit-panel > p:first-child { font-size: 17px; color: var(--bg); }
+.hint { font-family: var(--mono); font-size: 12px !important; color: rgba(245,242,236,.55) !important; }
+.timeline { position: relative; padding-top: 10px; cursor: pointer; touch-action: pan-y; user-select: none; -webkit-user-select: none; border-radius: 8px; }
+.timeline:has(.day-range:focus-visible) { outline: 2px solid var(--accent-soft); outline-offset: 6px; }
+.day-range { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; pointer-events: none; }
 .days { display: grid; grid-template-columns: repeat(14,minmax(0,1fr)); gap: 4px; }
-.days span { aspect-ratio: 1/2.4; border-radius: 4px; background: rgba(245,242,236,.22); border: 1px solid transparent; }
-.days span:nth-child(n+8) { background: transparent; border-color: var(--accent-soft); }
-.days span:last-child { background: var(--accent-soft); }
-.days-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-family: var(--mono); font-size: 12px; color: var(--on-dark); }
+.days span { aspect-ratio: 1/2.4; border-radius: 5px; border: 1px solid rgba(245,242,236,.28); transition: background .2s, border-color .2s, transform .2s; }
+.days span.d-test, .days span.d-deadline { border-color: var(--accent-soft); }
+.days span.d-build.on { background: rgba(245,242,236,.55); border-color: transparent; }
+.days span.d-test.on { background: oklch(0.82 0.12 70 / .5); border-color: transparent; }
+.days span.d-deadline.on { background: var(--accent-soft); }
+.days span.now { transform: translateY(-8px); box-shadow: 0 6px 14px -4px rgba(0,0,0,.5); }
+.days-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: -8px; font-family: var(--mono); font-size: 12px; color: var(--on-dark); }
 .days-legend > span:last-child { display: flex; justify-content: space-between; gap: 8px; color: var(--accent-soft); }
-.habits { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,260px),1fr)); gap: 32px clamp(28px,4vw,48px); }
-.habits li { display: flex; flex-direction: column; gap: 12px; }
+.day-status { min-height: 3.2em; color: var(--bg) !important; }
+.day-status strong { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--accent-soft); }
+.evidence { list-style: none; margin: 0; padding: 0; }
+.evidence li { border-top: 1px solid var(--rule); }
+.evidence li:last-child { border-bottom: 1px solid var(--rule); }
+.evidence a.row { color: var(--bg); }
+.evidence .row { display: grid; grid-template-columns: 136px minmax(0,1fr) auto; gap: 4px 16px; align-items: baseline; padding: 14px 2px; }
+.evidence strong { font-size: 15px; font-weight: 600; }
+.evidence strong a { color: var(--bg); border-bottom: 1px solid rgba(245,242,236,.3); }
+.evidence strong a:hover { color: var(--accent-soft); border-color: var(--accent-soft); }
+.evidence .row > span { font-size: 15px; line-height: 1.55; color: var(--on-dark); text-wrap: pretty; }
+.evidence em { font-style: normal; font-family: var(--mono); font-size: 12px; color: var(--accent-soft); white-space: nowrap; }
+.evidence a.row:hover strong, .evidence a.row:hover em { color: var(--accent-soft); }
+.evidence a.row:focus-visible { outline: 2px solid var(--accent-soft); outline-offset: 2px; border-radius: 6px; }
+@media (max-width: 560px) {
+  .evidence .row { grid-template-columns: minmax(0,1fr) auto; }
+  .evidence .row > span { grid-column: 1 / -1; grid-row: 2; }
+}
+.era { display: inline-flex; align-self: flex-start; padding: 4px; border-radius: 999px; background: rgba(245,242,236,.08); border: 1px solid rgba(245,242,236,.12); }
+.era button { all: unset; cursor: pointer; padding: 7px 18px; border-radius: 999px; font-size: 14px; font-weight: 500; color: var(--on-dark); transition: background .2s, color .2s; }
+.era button[aria-pressed="true"] { background: var(--bg); color: var(--ink); }
+.era button:focus-visible { outline: 2px solid var(--accent-soft); outline-offset: 2px; }
+.fixes .row { grid-template-columns: 136px minmax(0,1fr); }
+.fixes[data-era="then"] .now, .fixes[data-era="now"] .then { display: none; }
+.fixes .then { color: rgba(245,242,236,.62) !important; }
+.fixes .now { color: var(--bg) !important; }
+.fixes .now::before { content: '✓  '; color: var(--accent-soft); }
+.ci { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.ci li { display: grid; grid-template-columns: 20px minmax(0,1fr) auto; gap: 2px 12px; align-items: center; padding: 12px 14px; border-radius: 12px; background: rgba(245,242,236,.05); border: 1px solid rgba(245,242,236,.08); }
+.ci strong { font-size: 15px; font-weight: 600; }
+.ci li > span:not(.ci-mark) { grid-column: 2 / -1; font-size: 14px; line-height: 1.45; color: var(--on-dark); }
+.ci-mark { grid-row: 1 / span 2; position: relative; width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; border: 2px solid rgba(245,242,236,.3); }
+.ci-state { grid-column: 3; grid-row: 1; font-style: normal; font-family: var(--mono); font-size: 12px; color: var(--on-dark); }
+.ci li[data-state="passed"] .ci-mark { background: var(--ok); border-color: var(--ok); }
+.ci li[data-state="passed"] .ci-mark::after { content: ''; position: absolute; left: 5px; top: 2px; width: 4px; height: 8px; border: solid var(--ink); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.ci li[data-state="passed"] .ci-state { color: oklch(0.82 0.14 150); }
+.ci li[data-state="running"] .ci-mark { border-color: var(--accent-soft); border-top-color: transparent; animation: spin .8s linear infinite; }
+.ci li[data-state="running"] .ci-state { color: var(--accent-soft); }
+@keyframes spin { to { transform: rotate(360deg); } }
+.ci-foot { display: flex; align-items: center; gap: 12px 16px; flex-wrap: wrap; }
+.replay { all: unset; cursor: pointer; padding: 10px 18px; border-radius: 999px; background: var(--bg); color: var(--ink); font-size: 14px; font-weight: 500; transition: background .2s; }
+.replay:hover { background: var(--accent-soft); }
+.replay:focus-visible { outline: 2px solid var(--accent-soft); outline-offset: 3px; }
+.replay:disabled { opacity: .5; cursor: default; }
+.ci-status { font-family: var(--mono); font-size: 12px; color: var(--on-dark); }
 
 /* Skills */
 .skills { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,320px),1fr)); gap: 16px; }
@@ -280,11 +337,14 @@ a.frame:hover img { transform: scale(1.02); }
 .proof a { color: var(--faint); border-bottom: 1px solid var(--line-2); white-space: nowrap; }
 .proof a:hover { color: var(--accent); border-color: var(--accent); }
 .proof a + a::before { content: '·'; display: inline-block; margin: 0 7px; color: var(--faint); pointer-events: none; }
-.beyond { grid-column: 1 / -1; padding: 24px; display: flex; flex-direction: column; gap: 18px; }
-.beyond ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,220px),1fr)); gap: 20px 32px; }
-.beyond li { display: flex; flex-direction: column; gap: 6px; padding-top: 14px; border-top: 1px solid var(--line); }
-.beyond strong { font-size: 16px; font-weight: 600; }
-.beyond span { font-size: 14.5px; line-height: 1.55; color: var(--muted); text-wrap: pretty; }
+.soft-head { display: flex; justify-content: space-between; align-items: baseline; gap: 4px 24px; flex-wrap: wrap; margin: 56px 0 20px; }
+.soft-head .group-title { margin: 0; }
+.soft-head p { margin: 0; font-size: 16px; color: var(--muted); }
+.soft { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,320px),1fr)); gap: 16px; }
+.soft li { padding: 22px 24px; display: flex; flex-direction: column; gap: 8px; }
+.soft strong { font-family: var(--serif); font-weight: 400; font-size: 26px; line-height: 1.1; }
+.soft li > span:not(.proof) { font-size: 15px; line-height: 1.55; color: var(--ink-2); text-wrap: pretty; }
+.soft .proof { margin-top: auto; padding-top: 6px; }
 
 /* Background */
 .cv { padding: 0 clamp(20px,3vw,36px); }
@@ -407,9 +467,9 @@ footer div { display: flex; gap: 20px; }
       <div class="about-copy">
         <span class="label">About me</span>
         <h2 class="h2" id="about-title">Hi, I’m Ethan.</h2>
-        <p>I’m a Year 2 Information Technology student at Singapore Polytechnic, minoring in Business. I got into programming through robotics. It earned me a Direct School Admission place at Maris Stella High School, where I went on to mentor juniors in the Robotics &amp; Programming Club and compete in the international Perse Coding Team Challenge, winning a Merit Award in 2023.</p>
+        <p>I’m a Year 2 Information Technology student at Singapore Polytechnic, minoring in Business. I got into programming through robotics. It earned me a Direct School Admission place at Maris Stella High School, where I went on to mentor juniors in the Robotics &amp; Programming Club and win a Merit Award at an international coding competition.</p>
         <p>Now I like owning a project end to end: designing the database, writing the API, making the interface clear and getting it live where people can use it. I also go back to my older school projects and rebuild them properly, fixing the security gaps, hard-coded values and accessibility issues I didn’t know about in Year 1.</p>
-        <p>Away from the keyboard, I’ve worked part-time on busy kitchen lines, emceed my school’s prize-giving ceremony and volunteered at community events with 100+ participants.</p>
+        <p>Away from the keyboard, I’ve worked part-time on busy kitchen lines, emceed school events and volunteered at community events with 100+ participants.</p>
         <dl class="about-facts">
           <div><dt>Based in</dt><dd>Singapore</dd></div>
           <div><dt>Studying</dt><dd>Diploma in IT, Year 2</dd></div>
@@ -422,27 +482,68 @@ footer div { display: flex; gap: 20px; }
   </section>
 
   <div class="wrap">
-    <section class="how" aria-labelledby="how-title">
-      <div>
-        <span class="label">How I work</span>
-        <h2 id="how-title">The habits behind my projects.</h2>
-      </div>
-      <div class="rule">
+    <section class="how" id="how" aria-labelledby="how-title">
+      <div class="how-head">
         <div>
-          <span class="habit-num">01</span>
-          <h3>A working build, seven days early.</h3>
-          <p>My personal rule: every project has a working build ready seven days before its deadline. That leaves a full week for edge-case testing and refinement.</p>
+          <span class="label">How I work</span>
+          <h2 id="how-title">The habits behind my projects.</h2>
         </div>
-        <div class="days-wrap" aria-hidden="true">
-          <div class="days"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-          <div class="days-legend"><span>Build → working version</span><span><span>Test + refine</span><span>Deadline</span></span></div>
+        <p>Pick a habit to see it in my projects.</p>
+      </div>
+      <div class="how-body">
+        <div class="habit-tabs" role="tablist" aria-label="Habits" aria-orientation="vertical">
+          <button type="button" role="tab" id="habit-tab-1" aria-controls="habit-1" aria-selected="true"><span class="habit-num">01</span><span>A working build, seven days early.</span></button>
+          <button type="button" role="tab" id="habit-tab-2" aria-controls="habit-2" aria-selected="false" tabindex="-1"><span class="habit-num">02</span><span>If it’s on the web, you can try it.</span></button>
+          <button type="button" role="tab" id="habit-tab-3" aria-controls="habit-3" aria-selected="false" tabindex="-1"><span class="habit-num">03</span><span>Go back and fix it.</span></button>
+          <button type="button" role="tab" id="habit-tab-4" aria-controls="habit-4" aria-selected="false" tabindex="-1"><span class="habit-num">04</span><span>Let CI catch it first.</span></button>
+        </div>
+
+        <div class="habit-panel" role="tabpanel" id="habit-1" aria-labelledby="habit-tab-1" tabindex="0">
+          <p>My personal rule: every project has a working build ready seven days before its deadline. That leaves a full week for edge-case testing and refinement.</p>
+          <div class="timeline" id="timeline">
+            <div class="days" id="days" aria-hidden="true"></div>
+            <input type="range" class="day-range" id="day-range" min="1" max="14" value="7" aria-label="Day of a two-week project">
+          </div>
+          <div class="days-legend" aria-hidden="true"><span>Build → working version</span><span><span>Test + refine</span><span>Deadline</span></span></div>
+          <p class="day-status" id="day-status"></p>
+          <p class="hint">Drag across the two weeks, or use the arrow keys.</p>
+        </div>
+
+        <div class="habit-panel" role="tabpanel" id="habit-2" aria-labelledby="habit-tab-2" tabindex="0" hidden>
+          <p>Every web project here runs as a free live demo. For apps that need a server, I port the backend to run in the browser, so anyone can click through without an account.</p>
+          <ul class="evidence">
+            <li><a class="row" href="https://ethanyap123.github.io/ai-code-snippet-hub/" target="_blank" rel="noopener"><strong>Snippet Hub</strong><span>Postgres and pgvector run in your browser on PGlite.</span><em>Try it ↗</em></a></li>
+            <li><a class="row" href="https://ethanyap123.github.io/academic-rag-search/" target="_blank" rel="noopener"><strong>RAG Search</strong><span>Embeddings and PDF reading run in your browser with transformers.js and pdf.js.</span><em>Try it ↗</em></a></li>
+            <li><a class="row" href="https://ethanyap123.github.io/pokemon-gamified-battle-system/" target="_blank" rel="noopener"><strong>Pokémon</strong><span>Every API route is answered in your browser, using the real battle engine.</span><em>Try it ↗</em></a></li>
+            <li><a class="row" href="https://ethanyap123.github.io/incident-monitoring-dashboard/" target="_blank" rel="noopener"><strong>Incident Monitor</strong><span>The telemetry simulator and alert engine run right in the page.</span><em>Try it ↗</em></a></li>
+            <li><a class="row" href="https://ethanyap123.github.io/trend-sentiment-tracker/" target="_blank" rel="noopener"><strong>Trend Tracker</strong><span>A fresh data snapshot every six hours, queried in your browser.</span><em>Try it ↗</em></a></li>
+          </ul>
+        </div>
+
+        <div class="habit-panel" role="tabpanel" id="habit-3" aria-labelledby="habit-tab-3" tabindex="0" hidden>
+          <p>I revisit my Year 1 projects with what I know now and fix what I missed the first time.</p>
+          <div class="era" role="group" aria-label="Show each project">
+            <button type="button" data-era="then" aria-pressed="true">Year 1</button>
+            <button type="button" data-era="now" aria-pressed="false">Now</button>
+          </div>
+          <ul class="evidence fixes" id="fixes" data-era="then">
+            <li><div class="row"><strong><a href="#p-pokemon">Pokémon</a></strong><span class="then">Any logged-in player could act on another player’s account, and gym rewards could be claimed more than once.</span><span class="now">Ownership checks on every player route, rewards only for a won battle, and every purchase run as one database transaction.</span></div></li>
+            <li><div class="row"><strong><a href="#p-retail">Retail App</a></strong><span class="then">A hard-coded server address and payment list, plus data-loading bugs on the server.</span><span class="now">100,000 rows packed into compact JSON, so it runs on GitHub Pages with no server at all.</span></div></li>
+            <li><div class="row"><strong><a href="#p-wellness">Wellness Hub</a></strong><span class="then">Console errors, unescaped user input and broken mobile layouts.</span><span class="now">Escaped input, labelled controls, live regions, reduced motion and keyboard focus.</span></div></li>
+          </ul>
+        </div>
+
+        <div class="habit-panel" role="tabpanel" id="habit-4" aria-labelledby="habit-tab-4" tabindex="0" hidden>
+          <p>Tests run in GitHub Actions on every push to main. In RAG Search and Trend Tracker, a failing test blocks the deploy, so a broken change never reaches the live demo.</p>
+          <ol class="ci" id="ci">
+            <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>RAG Search</strong><span>26 pytest tests for ingestion, retrieval, answers and the API</span><em class="ci-state">passed</em></li>
+            <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Trend Tracker</strong><span>18 pytest tests, including a parity test of the dashboard’s JavaScript against the Python analytics</span><em class="ci-state">passed</em></li>
+            <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Incident Monitor</strong><span>15 unit tests for the alert engine and telemetry simulator</span><em class="ci-state">passed</em></li>
+            <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Incident Monitor</strong><span>A smoke test that boots all five containers with Docker Compose</span><em class="ci-state">passed</em></li>
+          </ol>
+          <div class="ci-foot"><button type="button" class="replay" id="ci-replay">▶ Replay a run</button><span class="ci-status" id="ci-status" aria-live="polite">4 of 4 checks passed</span></div>
         </div>
       </div>
-      <ol class="habits">
-        <li><span class="habit-num">02</span><h3>If it’s on the web, you can try it.</h3><p>Every web project here runs as a free live demo. For apps that need a server, I port the backend to run in the browser, from Postgres on PGlite to embeddings on transformers.js, so anyone can click through without an account.</p></li>
-        <li><span class="habit-num">03</span><h3>Go back and fix it.</h3><p>I revisit my Year 1 projects with what I know now, adding the ownership checks, transactions, accessibility and input escaping I missed the first time.</p></li>
-        <li><span class="habit-num">04</span><h3>Let CI catch it first.</h3><p>Tests run on every push in GitHub Actions: pytest suites, a parity test that keeps a Python API and its JavaScript demo in sync, and a smoke test that boots a whole Docker stack.</p></li>
-      </ol>
     </section>
   </div>
 
@@ -452,19 +553,24 @@ footer div { display: flex; gap: 20px; }
         <span class="label">Skills</span>
         <h2 class="h2" id="skills-title">What I work with.</h2>
       </div>
-      <p class="section-intro">Each skill links to the projects on this page where I used it, so you can see it in action.</p>
+      <p class="section-intro">Every skill links to the place on this page where I’ve used it, so you can see it in action.</p>
     </div>
-    <div class="skills" id="skills-grid">
-      <div class="card beyond">
-        <span class="label">Beyond code</span>
-        <ul>
-          <li><strong>Presenting</strong><span>Emceed my school’s 2023 prize-giving ceremony and presented at assemblies as a Marist Ambassador.</span></li>
-          <li><strong>Mentoring</strong><span>Taught juniors programming in the Marist Robotics &amp; Programming Club.</span></li>
-          <li><strong>Teamwork</strong><span>Pair-built the Internship System with Janston, and designed MyLearningAI in a group of four.</span></li>
-          <li><strong>Staying calm at peak hour</strong><span>Two part-time kitchen jobs taught me to keep orders moving and quality up during the rush.</span></li>
-        </ul>
-      </div>
+    <div class="skills" id="skills-grid"></div>
+    <div class="soft-head">
+      <h3 class="group-title">Soft skills</h3>
+      <p>The ones employers ask for most, and where I’ve shown them.</p>
     </div>
+    <ul class="soft">
+      <li class="card"><strong>Communication</strong><span>Frequently emceed school events such as prize-giving ceremonies, and volunteered at multiple Open Houses.</span><span class="proof"><a href="#leadership">Marist Ambassador</a></span></li>
+      <li class="card"><strong>Teamwork</strong><span>Split the Internship App with a partner and joined our halves into one system, and designed MyLearningAI in a group of four.</span><span class="proof"><a href="#p-internship">Internship App</a><a href="#p-mylearning">MyLearningAI</a></span></li>
+      <li class="card"><strong>Problem-solving</strong><span>I trace bugs to their cause. I found an authorisation hole in my own Year 1 API and closed it on every player route.</span><span class="proof"><a href="#p-pokemon">Pokémon</a></span></li>
+      <li class="card"><strong>Time management</strong><span>A working build seven days before every deadline, while holding a part-time job alongside my diploma.</span><span class="proof"><a href="#how">How I work</a><a href="#jobs">Work experience</a></span></li>
+      <li class="card"><strong>Working under pressure</strong><span>Kept orders accurate and moving on busy kitchen lines, through peak service and the festive rush.</span><span class="proof"><a href="#jobs">Work experience</a></span></li>
+      <li class="card"><strong>Leadership &amp; mentoring</strong><span>Class Vice-Chairman and Peer Supporter, and mentored juniors in the Robotics &amp; Programming Club.</span><span class="proof"><a href="#leadership">Leadership</a></span></li>
+      <li class="card"><strong>Initiative</strong><span>Built four projects outside class, rebuilt my Year 1 work and put every web project online as a free live demo.</span><span class="proof"><a href="#work">Projects</a></span></li>
+      <li class="card"><strong>Learning from feedback</strong><span>Ran usability tests on MyLearningAI and changed the design where testers got stuck.</span><span class="proof"><a href="#p-mylearning">MyLearningAI</a></span></li>
+      <li class="card"><strong>Customer focus</strong><span>Served high-volume crowds at the register and barista station, and ran registration for community events of 100+ people.</span><span class="proof"><a href="#jobs">Work experience</a><a href="#leadership">Community service</a></span></li>
+    </ul>
   </section>
 
   <section id="background" class="section wrap" aria-labelledby="background-title">
@@ -481,7 +587,7 @@ footer div { display: flex; gap: 20px; }
           <div class="cv-item">
             <div class="cv-top"><h4>Singapore Polytechnic</h4><span class="meta">Apr 2025 – 2028 (expected)</span></div>
             <p class="sub">Diploma in Information Technology, Minor in Business · <strong>GPA 3.49 / 4.00</strong> (Year 1)</p>
-            <p>Modules: Back-End &amp; Front-End Development, Java &amp; OOP, Database Systems, Web &amp; Mobile Apps</p>
+            <p>Key modules: Back-End Development, Java Programming, Continuous Integration &amp; Development, Software Engineering Principles, Design User Experience &amp; Interface</p>
           </div>
           <div class="cv-item">
             <div class="cv-top"><h4>Maris Stella High School</h4><span class="meta">2021 – 2024</span></div>
@@ -490,7 +596,7 @@ footer div { display: flex; gap: 20px; }
           </div>
         </div>
       </div>
-      <div class="cv-row">
+      <div class="cv-row" id="jobs">
         <h3 class="label">Work experience</h3>
         <div class="cv-items">
           <div class="cv-item">
@@ -509,11 +615,11 @@ footer div { display: flex; gap: 20px; }
           </div>
         </div>
       </div>
-      <div class="cv-row">
+      <div class="cv-row" id="leadership">
         <h3 class="label">Leadership &amp; community</h3>
         <div class="cv-items">
-          <div class="cv-item"><div class="cv-top"><h4>Marist Ambassador</h4><span class="meta">2021 – 2024</span></div><p>Emceed the 2023 year-end prize-giving ceremony, presented at morning assemblies and guided visitors at Open Houses.</p></div>
-          <div class="cv-item"><div class="cv-top"><h4>Marist Robotics &amp; Programming Club</h4><span class="meta">2021 – 2024</span></div><p>Mentored juniors in programming and represented the school at the international Perse Coding Team Challenge (2022, 2023).</p></div>
+          <div class="cv-item"><div class="cv-top"><h4>Marist Ambassador</h4><span class="meta">2021 – 2024</span></div><p>Frequently emceed school events such as prize-giving ceremonies, and volunteered at multiple Open Houses.</p></div>
+          <div class="cv-item"><div class="cv-top"><h4>Marist Robotics &amp; Programming Club</h4><span class="meta">2021 – 2024</span></div><p>Mentored juniors in programming and represented the school at the international Perse Coding Team Challenge (2022, 2023), earning a <strong>Merit Award</strong> in 2023.</p></div>
           <div class="cv-item"><div class="cv-top"><h4>Class Vice-Chairman · Peer Supporter</h4><span class="meta">2022, 2024</span></div><p>Secondary 4 Vice-Chairman; Secondary 2 Peer Supporter.</p></div>
           <div class="cv-item"><div class="cv-top"><h4>Community service</h4><span class="meta">2022 – 2025</span></div><p>Volunteer with Mummy Yummy (2023–2025), running registration for community events of 100+ participants. Recycling drive with Magorium, Ramadan volunteering at Masjid Kassim and hampers for St Theresa’s Home.</p></div>
         </div>
@@ -522,7 +628,6 @@ footer div { display: flex; gap: 20px; }
         <h3 class="label">Awards</h3>
         <div class="cv-items">
           <div class="cv-item"><div class="cv-top"><h4>Edusave Character Award</h4><span class="meta">2024</span></div><p>Ministry of Education and People’s Association, for exemplary character.</p></div>
-          <div class="cv-item"><div class="cv-top"><h4>Merit Award, Perse Coding Team Challenge</h4><span class="meta">2023</span></div><p>International programming competition.</p></div>
         </div>
       </div>
     </div>
@@ -765,7 +870,7 @@ document.getElementById('more').innerHTML = PROJECTS.filter(p => !p.featured).ma
   </article>`).join('');
 
 const byId = Object.fromEntries(PROJECTS.map(p => [p.id, p]));
-document.getElementById('skills-grid').insertAdjacentHTML('afterbegin', SKILLS.map(g => `
+document.getElementById('skills-grid').innerHTML = SKILLS.map(g => `
   <div class="card skill-card">
     <h3 class="label">${esc(g.group)}</h3>
     <ul>${g.items.map(([name, used]) => `
@@ -773,7 +878,87 @@ document.getElementById('skills-grid').insertAdjacentHTML('afterbegin', SKILLS.m
         Array.isArray(used) ? `<span class="proof">${used.map(id => `<a href="#p-${id}">${esc(byId[id].short)}</a>`).join('')}</span>`
         : used ? `<span class="proof">${esc(used)}</span>` : ''}</li>`).join('')}
     </ul>
-  </div>`).join(''));
+  </div>`).join('');
+
+// How I work: tabs, with arrow keys moving between them.
+const habitTabs = [...document.querySelectorAll('.habit-tabs [role="tab"]')];
+function selectHabit(tab, focus) {
+  habitTabs.forEach(t => {
+    const on = t === tab;
+    t.setAttribute('aria-selected', on);
+    t.tabIndex = on ? 0 : -1;
+    document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+  });
+  if (focus) tab.focus();
+}
+habitTabs.forEach((tab, i) => {
+  tab.addEventListener('click', () => selectHabit(tab));
+  tab.addEventListener('keydown', e => {
+    const n = habitTabs.length;
+    const next = { ArrowDown: i + 1, ArrowRight: i + 1, ArrowUp: i - 1, ArrowLeft: i - 1, Home: 0, End: n - 1 }[e.key];
+    if (next === undefined) return;
+    e.preventDefault();
+    selectHabit(habitTabs[(next + n) % n], true);
+  });
+});
+
+// Habit 1: scrub through a two-week project. Days 1-7 build, 8-13 test, 14 is the deadline.
+const days = document.getElementById('days');
+const dayRange = document.getElementById('day-range');
+const dayStatus = document.getElementById('day-status');
+days.innerHTML = Array.from({ length: 14 }, (_, i) => `<span class="${i < 7 ? 'd-build' : i < 13 ? 'd-test' : 'd-deadline'}"></span>`).join('');
+const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
+function setDay(d) {
+  dayRange.value = d;
+  [...days.children].forEach((s, i) => { s.classList.toggle('on', i < d); s.classList.toggle('now', i === d - 1); });
+  const text = d < 7 ? `Building: getting the core features working end to end. ${plural(7 - d, 'day')} to a working build.`
+    : d === 7 ? 'Working build ready, a full week before the deadline.'
+    : d < 14 ? `Testing and refining: edge cases, bugs and polish. ${plural(14 - d, 'day')} to the deadline.`
+    : 'Deadline: submitted, with a full week of testing behind it.';
+  dayStatus.innerHTML = `<strong>Day ${d}</strong> · ${text}`;
+  dayRange.setAttribute('aria-valuetext', `Day ${d}. ${text}`);
+}
+dayRange.addEventListener('input', () => setDay(+dayRange.value));
+const timeline = document.getElementById('timeline');
+const dayAt = x => { const r = days.getBoundingClientRect(); return Math.min(14, Math.max(1, Math.ceil((x - r.left) / r.width * 14))); };
+timeline.addEventListener('pointerdown', e => {
+  e.preventDefault(); // keeps focus on the slider below instead of moving it to the page
+  setDay(dayAt(e.clientX));
+  timeline.setPointerCapture(e.pointerId);
+  dayRange.focus({ preventScroll: true });
+});
+timeline.addEventListener('pointermove', e => { if (timeline.hasPointerCapture(e.pointerId)) setDay(dayAt(e.clientX)); });
+setDay(7);
+
+// Habit 3: flip the rebuilt projects between Year 1 and now.
+const fixes = document.getElementById('fixes');
+document.querySelectorAll('.era button').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('.era button').forEach(b => b.setAttribute('aria-pressed', b === btn));
+  fixes.dataset.era = btn.dataset.era;
+}));
+
+// Habit 4: replay a CI run, ticking the checks off one at a time.
+const ciRows = [...document.querySelectorAll('#ci li')];
+const ciStatus = document.getElementById('ci-status');
+const replay = document.getElementById('ci-replay');
+const setCi = (row, state) => { row.dataset.state = state; row.querySelector('.ci-state').textContent = state; };
+replay.addEventListener('click', () => {
+  const delay = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 750;
+  ciRows.forEach(r => setCi(r, 'queued'));
+  ciStatus.textContent = `Running ${ciRows.length} checks…`;
+  replay.disabled = true;
+  let i = 0;
+  (function step() {
+    if (i > 0) setCi(ciRows[i - 1], 'passed');
+    if (i === ciRows.length) {
+      ciStatus.textContent = `${ciRows.length} of ${ciRows.length} checks passed`;
+      replay.disabled = false;
+      return;
+    }
+    setCi(ciRows[i++], 'running');
+    setTimeout(step, delay);
+  })();
+});
 
 // Filters hide non-matching projects in both groups, and a group with nothing left.
 const filterBar = document.getElementById('filters');
