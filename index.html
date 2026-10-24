@@ -20,8 +20,12 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
 <style>
+/* Local fallbacks scaled to the web fonts' widths, so text doesn't reflow when they load. */
+@font-face { font-family: 'Serif Fallback'; src: local('Times New Roman'); size-adjust: 83.6%; }
+@font-face { font-family: 'Sans Fallback'; src: local('Arial'); size-adjust: 102.6%; }
 :root {
   --bg: #f5f2ec;
   --surface: #fff;
@@ -29,7 +33,7 @@
   --ink: #1c1b18;
   --ink-2: #3d3a34;
   --muted: #5c574f;
-  --faint: #8a847a;
+  --faint: #736d64;
   --line: rgba(28,27,24,.08);
   --line-2: rgba(28,27,24,.12);
   --accent: oklch(0.55 0.15 50);
@@ -37,8 +41,8 @@
   --ok: oklch(0.65 0.16 150);
   --gutter: clamp(20px,4vw,40px);
   --section-gap: clamp(56px,8vw,96px);
-  --serif: 'Instrument Serif', Georgia, serif;
-  --sans: 'Instrument Sans', system-ui, sans-serif;
+  --serif: 'Instrument Serif', 'Serif Fallback', Georgia, serif;
+  --sans: 'Instrument Sans', 'Sans Fallback', system-ui, sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, monospace;
 }
 * { box-sizing: border-box; }
@@ -106,7 +110,16 @@ h1 em { white-space: nowrap; color: var(--accent); }
 /* Projects */
 .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; flex-wrap: wrap; }
 .section-head a { font-size: 14px; color: var(--muted); }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-top: -8px; }
+.filter { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 8px 15px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--surface); font-size: 14px; font-weight: 500; color: var(--ink-2); transition: background .2s, border-color .2s, color .2s; }
+.filter:hover { border-color: var(--ink); }
+.filter:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.filter[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.filter .count { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+.filter[aria-pressed="true"] .count { color: #c4beb4; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .projects { display: flex; flex-direction: column; gap: 12px; }
+.project[hidden] { display: none; }
 .project { overflow: hidden; box-shadow: 0 1px 2px rgba(28,27,24,.04); }
 .project-toggle { all: unset; box-sizing: border-box; cursor: pointer; width: 100%; display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: clamp(16px,3vw,32px); align-items: center; padding: clamp(20px,3vw,28px); }
 .project-toggle:hover { background: var(--surface-hover); }
@@ -238,6 +251,8 @@ footer a { color: var(--faint); }
       <h2 class="h2">Selected work</h2>
       <a href="https://github.com/EthanYap123" target="_blank" rel="noopener">All repos on GitHub ↗</a>
     </div>
+    <div class="filters" id="filters" role="group" aria-label="Filter projects by type"></div>
+    <p class="sr-only" id="filter-status" aria-live="polite"></p>
     <div class="projects" id="projects"></div>
   </section>
 
@@ -339,30 +354,39 @@ footer a { color: var(--faint); }
 
 <script>
 const PROJECTS = [
-  { title: 'Pokémon Gym & Battle System', summary: 'Full-stack Pokémon game with turn-based gym battles, a gacha shop and a REST API over MySQL.', stack: ['Node.js','Express','MySQL','JWT','bcrypt','JavaScript'], shot: 'battle screen screenshot', img: 'assets/pokemon-battle-system.jpg', repo: 'https://github.com/EthanYap123/pokemon-gamified-battle-system', live: 'https://ethanyap123.github.io/pokemon-gamified-battle-system/',
+  { title: 'Pokémon Gym & Battle System', tags: ['fullstack'], summary: 'Full-stack Pokémon game with turn-based gym battles, a gacha shop and a REST API over MySQL.', stack: ['Node.js','Express','MySQL','JWT','bcrypt','JavaScript'], shot: 'battle screen screenshot', img: 'assets/pokemon-battle-system.jpg', repo: 'https://github.com/EthanYap123/pokemon-gamified-battle-system', live: 'https://ethanyap123.github.io/pokemon-gamified-battle-system/',
     points: ['Built a full-stack web game on an Express REST API over MySQL, with JWT login, bcrypt password hashing and ownership checks on every player route.','Wrote a turn-based battle engine using the main-series damage formula, type effectiveness, priority moves and switching, with gym levels tuned by simulating thousands of battles.','Added a gacha shop with 10-pulls, a pity counter and a daily free ball, each run as a single database transaction, and fixed reward exploits and crashing endpoints in the Year 1 version.'] },
-  { title: 'Incident Monitoring Dashboard', summary: 'Containerized observability stack that simulates service telemetry, raises alerts and streams them to a live dashboard.', stack: ['Docker Compose','Node.js','PostgreSQL','WebSockets','Next.js','Tailwind CSS','GitHub Actions'], shot: 'live dashboard screenshot', img: 'assets/incident-monitoring-dashboard.jpg', repo: 'https://github.com/EthanYap123/incident-monitoring-dashboard', live: 'https://ethanyap123.github.io/incident-monitoring-dashboard/',
+  { title: 'Incident Monitoring Dashboard', tags: ['fullstack'], summary: 'Containerized observability stack that simulates service telemetry, raises alerts and streams them to a live dashboard.', stack: ['Docker Compose','Node.js','PostgreSQL','WebSockets','Next.js','Tailwind CSS','GitHub Actions'], shot: 'live dashboard screenshot', img: 'assets/incident-monitoring-dashboard.jpg', repo: 'https://github.com/EthanYap123/incident-monitoring-dashboard', live: 'https://ethanyap123.github.io/incident-monitoring-dashboard/',
     points: ['Designed a five-container Docker Compose stack (telemetry simulator, Express metrics collector, PostgreSQL, mock webhook receiver and an nginx-served Next.js dashboard) with health checks and start-up ordering.','Wrote a threshold alerting engine with hysteresis that opens, escalates and resolves incidents, sends webhooks with retries, and keeps open incidents and edited thresholds across restarts.','Built a real-time Next.js and Tailwind dashboard over WebSockets with a polling fallback, live charts, chaos controls for traffic spikes, failures and memory leaks, and an incident log, tested end to end in GitHub Actions.'] },
-  { title: 'AI Code Snippet & Documentation Hub', summary: 'Knowledge base where an LLM documents, tags and embeds pasted code so you can find it by describing what it does.', stack: ['Next.js 16','TypeScript','PostgreSQL','pgvector','Gemini API','Tailwind CSS','Zod'], shot: 'semantic search screenshot', img: 'assets/ai-code-snippet-hub.jpg', repo: 'https://github.com/EthanYap123/ai-code-snippet-hub', live: 'https://ethanyap123.github.io/ai-code-snippet-hub/',
+  { title: 'AI Code Snippet & Documentation Hub', tags: ['fullstack','ai'], summary: 'Knowledge base where an LLM documents, tags and embeds pasted code so you can find it by describing what it does.', stack: ['Next.js 16','TypeScript','PostgreSQL','pgvector','Gemini API','Tailwind CSS','Zod'], shot: 'semantic search screenshot', img: 'assets/ai-code-snippet-hub.jpg', repo: 'https://github.com/EthanYap123/ai-code-snippet-hub', live: 'https://ethanyap123.github.io/ai-code-snippet-hub/',
     points: ['Built a Next.js App Router app whose route handlers save snippets and queue a job, with a background worker that claims jobs safely across instances (FOR UPDATE SKIP LOCKED), retries with backoff and falls back to an offline engine.','Used Gemini structured output, validated with Zod, to write documentation and tags, and stored 768-dimension embeddings in pgvector with an HNSW index for semantic search re-ranked by Postgres full-text scores.','Made a GitHub Pages demo that runs the same schema, worker and SQL in the browser on PGlite with pgvector, alongside a CodeMirror editor, Shiki highlighting, dark mode, loading skeletons and error states.'] },
-  { title: 'Academic Resource RAG Search Engine', summary: 'Ask questions about policy handbooks and get answers built only from the documents, each claim cited to its page and section.', stack: ['Python','FastAPI','ChromaDB','Sentence embeddings','Gemini API','pypdf','transformers.js','GitHub Actions'], shot: 'answer with cited sources screenshot', img: 'assets/academic-rag-search.jpg', repo: 'https://github.com/EthanYap123/academic-rag-search', live: 'https://ethanyap123.github.io/academic-rag-search/',
+  { title: 'Academic Resource RAG Search Engine', tags: ['fullstack','ai'], summary: 'Ask questions about policy handbooks and get answers built only from the documents, each claim cited to its page and section.', stack: ['Python','FastAPI','ChromaDB','Sentence embeddings','Gemini API','pypdf','transformers.js','GitHub Actions'], shot: 'answer with cited sources screenshot', img: 'assets/academic-rag-search.jpg', repo: 'https://github.com/EthanYap123/academic-rag-search', live: 'https://ethanyap123.github.io/academic-rag-search/',
     points: ['Built a FastAPI ingestion pipeline that reads PDFs page by page, strips running headers and page numbers, tracks section headings and packs sentence-aligned chunks that never cross a page, embedded locally with MiniLM and stored in ChromaDB.','Wrote grounded answering that only uses retrieved chunks: a relevance cut-off refuses off-topic questions, Gemini must cite a numbered source for every claim (uncited answers are rejected), and a keyless extractive mode quotes the best sentences verbatim.','Designed a chat UI with clickable citation chips beside highlighted source passages and PDF uploads, and shipped a GitHub Pages demo that runs the same retrieval and answering in the browser with transformers.js and pdf.js, covered by 26 pytest tests in CI.'] },
-  { title: 'Tech Trend Sentiment Tracker', summary: 'Automated data pipeline that scores the mood of tech and market news every six hours and charts the trends.', stack: ['Python','pandas','SQLite','FastAPI','APScheduler','Next.js','Recharts','Tailwind CSS','GitHub Actions'], shot: 'sentiment dashboard screenshot', img: 'assets/trend-sentiment-tracker.jpg', repo: 'https://github.com/EthanYap123/trend-sentiment-tracker', live: 'https://ethanyap123.github.io/trend-sentiment-tracker/',
+  { title: 'Tech Trend Sentiment Tracker', tags: ['data','fullstack'], summary: 'Automated data pipeline that scores the mood of tech and market news every six hours and charts the trends.', stack: ['Python','pandas','SQLite','FastAPI','APScheduler','Next.js','Recharts','Tailwind CSS','GitHub Actions'], shot: 'sentiment dashboard screenshot', img: 'assets/trend-sentiment-tracker.jpg', repo: 'https://github.com/EthanYap123/trend-sentiment-tracker', live: 'https://ethanyap123.github.io/trend-sentiment-tracker/',
     points: ['Built a Python ETL pipeline that pulls headlines from Hacker News, DEV.to and six news feeds, cleans and de-duplicates them with pandas and loads them into SQLite with upserts, 90-day retention and a log of every run, refreshed every six hours by a GitHub Actions cron.','Wrote lexicon-based sentiment scoring on the VADER word list with a tech and markets dictionary, negation and intensifier rules, plus keyword dictionaries that sort articles into 11 sectors and track 37 trend terms over time.','Served the analytics through a FastAPI backend with an in-process scheduler, and built a Next.js dashboard with Recharts trend, sector and keyword charts, date, sector and polarity filters and a searchable data log, whose Pages build answers the same queries in the browser, checked against the API by a parity test.'] },
-  { title: 'MyLearningAI Study App', summary: 'Mobile-first prototype of an AI-assisted learning app, built from our group’s UX design and usability testing.', stack: ['JavaScript','HTML','CSS','localStorage','Figma','UX research'], shot: 'app screens screenshot', img: 'assets/mylearningai-study-app.jpg', repo: 'https://github.com/EthanYap123/student-study-planner', live: 'https://ethanyap123.github.io/student-study-planner/',
+  { title: 'MyLearningAI Study App', tags: ['frontend'], summary: 'Mobile-first prototype of an AI-assisted learning app, built from our group’s UX design and usability testing.', stack: ['JavaScript','HTML','CSS','localStorage','Figma','UX research'], shot: 'app screens screenshot', img: 'assets/mylearningai-study-app.jpg', repo: 'https://github.com/EthanYap123/student-study-planner', live: 'https://ethanyap123.github.io/student-study-planner/',
     points: ['Turned our DEUI group’s sitemap, wireframes and Figma prototype into a working single-page app with 60+ screens, a hash router and saved progress, in vanilla JavaScript with no build step.','Built weekly tests from uploaded notes with flag, skip, a timer and instant feedback, plus results that estimate confidence from answer speed and changes, generated study plans and a topic-strength heatmap.','Wrote randomised maths question generators across seven topics with hints, worked solutions and detection of common mistakes, and added the fixes from our usability test report, light/dark themes and phone layouts down to 320px.'] },
-  { title: 'Retail Transaction Web App', summary: 'Sales dashboard over 100,000 retail transactions, with filters, export and transaction logging.', stack: ['JavaScript','Chart.js','Web Components','Node.js','Express','GitHub Actions'], shot: 'dashboard screenshot', img: 'assets/retail-transaction-webapp.jpg', repo: 'https://github.com/EthanYap123/retail-transaction-webapp', live: 'https://ethanyap123.github.io/retail-transaction-webapp/',
+  { title: 'Retail Transaction Web App', tags: ['data','frontend'], summary: 'Sales dashboard over 100,000 retail transactions, with filters, export and transaction logging.', stack: ['JavaScript','Chart.js','Web Components','Node.js','Express','GitHub Actions'], shot: 'dashboard screenshot', img: 'assets/retail-transaction-webapp.jpg', repo: 'https://github.com/EthanYap123/retail-transaction-webapp', live: 'https://ethanyap123.github.io/retail-transaction-webapp/',
     points: ['Built a sales dashboard over 100,000 transactions with KPI cards, a monthly and weekly revenue trend, category, payment and state breakdowns, and a day-by-hour heatmap.','Added shared filters, a sortable and paginated table, CSV/JSON export and a validated form for logging new transactions, saved in localStorage in the dataset’s own format.','Packed the CSV into a compact JSON file so the app runs on GitHub Pages without a server, deployed by a GitHub Actions workflow, and fixed the Year 1 server’s data-loading bugs.'] },
-  { title: 'Student Internship Management System', summary: 'Pair-built Java Swing desktop app for searching and reporting on internship placements.', stack: ['Java','OOP','Swing','NetBeans'], shot: 'enquiry system screenshot', img: 'assets/internship-management-system.jpg', repo: 'https://github.com/EthanYap123/internship-management-system',
+  { title: 'Student Internship Management System', tags: ['java'], summary: 'Pair-built Java Swing desktop app for searching and reporting on internship placements.', stack: ['Java','OOP','Swing','NetBeans'], shot: 'enquiry system screenshot', img: 'assets/internship-management-system.jpg', repo: 'https://github.com/EthanYap123/internship-management-system',
     points: ['Wrote case-insensitive, multi-field search over internship placements and allowances, with regex validation of student IDs.','Calculated each host company’s headcount and average performance score, shown in formatted Swing tables.','Built the Swing enquiry screen with record navigation, colour-coded grade badges, light and dark themes and an analytics view, and the file loading shared with my partner’s admin system.'] },
-  { title: 'Mental Wellness Hub', summary: 'Responsive wellness site with a mood tracker, breathing timer and gratitude journal.', stack: ['HTML','CSS','Bootstrap 5','JavaScript','localStorage'], shot: 'home page screenshot', img: 'assets/mental-wellness-hub.jpg', repo: 'https://github.com/EthanYap123/mental-wellness-hub', live: 'https://ethanyap123.github.io/mental-wellness-hub/',
+  { title: 'Mental Wellness Hub', tags: ['frontend'], summary: 'Responsive wellness site with a mood tracker, breathing timer and gratitude journal.', stack: ['HTML','CSS','Bootstrap 5','JavaScript','localStorage'], shot: 'home page screenshot', img: 'assets/mental-wellness-hub.jpg', repo: 'https://github.com/EthanYap123/mental-wellness-hub', live: 'https://ethanyap123.github.io/mental-wellness-hub/',
     points: ['Built a five-page responsive site on Bootstrap 5 with a CSS-variable design system and a light/dark mode that remembers the user’s choice.','Wrote a daily mood tracker with a 7-day chart, an animated breathing timer and a gratitude journal, all saved privately in localStorage.','Added a searchable, filterable directory of Singapore helplines, and fixed the Year 1 version’s console errors, unescaped user input and mobile layout bugs.'] },
+];
+
+const FILTERS = [
+  { id: 'all', label: 'All' },
+  { id: 'fullstack', label: 'Full-stack' },
+  { id: 'ai', label: 'AI & search' },
+  { id: 'data', label: 'Data' },
+  { id: 'frontend', label: 'Frontend & UX' },
+  { id: 'java', label: 'Java' },
 ];
 
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const list = document.getElementById('projects');
 list.innerHTML = PROJECTS.map((p, i) => `
-  <article class="card project">
+  <article class="card project" data-tags="${p.tags.join(' ')}">
     <button type="button" class="project-toggle" aria-expanded="false" aria-controls="project-${i}">
       <span class="project-num">${String(i + 1).padStart(2, '0')}</span>
       <span class="project-title"><strong>${esc(p.title)}</strong><span>${esc(p.summary)}</span></span>
@@ -395,6 +419,25 @@ function setOpen(index) {
 }
 toggles.forEach((btn, i) => btn.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') === 'true' ? -1 : i)));
 setOpen(0);
+
+// Filters show only matching projects and open the first one.
+const filterBar = document.getElementById('filters');
+const filterStatus = document.getElementById('filter-status');
+const articles = [...list.querySelectorAll('.project')];
+filterBar.innerHTML = FILTERS.map(f => {
+  const n = f.id === 'all' ? PROJECTS.length : PROJECTS.filter(p => p.tags.includes(f.id)).length;
+  return `<button type="button" class="filter" data-filter="${f.id}" aria-pressed="${f.id === 'all'}">${esc(f.label)} <span class="count">${n}</span></button>`;
+}).join('');
+filterBar.addEventListener('click', e => {
+  const btn = e.target.closest('.filter');
+  if (!btn) return;
+  const id = btn.dataset.filter;
+  filterBar.querySelectorAll('.filter').forEach(b => b.setAttribute('aria-pressed', b === btn));
+  articles.forEach(a => { a.hidden = id !== 'all' && !a.dataset.tags.split(' ').includes(id); });
+  const shown = articles.filter(a => !a.hidden);
+  setOpen(articles.indexOf(shown[0]));
+  filterStatus.textContent = `Showing ${shown.length} ${shown.length === 1 ? 'project' : 'projects'}`;
+});
 
 const copyBtn = document.getElementById('copy-email');
 let copyTimer;
