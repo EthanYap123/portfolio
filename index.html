@@ -700,11 +700,11 @@ const PROJECTS = [
     built: [
       ['Background job queue', 'Built a Next.js App Router app whose route handlers save snippets and queue a job, with a background worker that claims jobs safely across instances (FOR UPDATE SKIP LOCKED), retries with backoff and falls back to an offline engine.'],
       ['AI docs and vector search', 'Used Gemini structured output, validated with Zod, to write documentation and tags, and stored 768-dimension embeddings in pgvector with an HNSW index for semantic search re-ranked by Postgres full-text scores.'],
-      ['In-browser demo', 'Made a GitHub Pages demo that runs the same schema, worker and SQL in the browser on PGlite with pgvector, alongside a CodeMirror editor, Shiki highlighting, dark mode, loading skeletons and error states.'],
+      ['Two deployments', 'Deployed the full app on Vercel with Neon Postgres and Gemini, guarded by per-visitor rate limits, a shared daily Gemini budget and an offline fallback, plus a GitHub Pages demo that runs the same schema, worker and SQL in the browser on PGlite.'],
     ],
-    stack: ['Next.js 16','TypeScript','PostgreSQL','pgvector','Gemini API','Tailwind CSS','Zod'],
+    stack: ['Next.js 16','TypeScript','PostgreSQL','pgvector','Gemini API','Vercel','Neon','Zod'],
     img: 'assets/ai-code-snippet-hub.jpg', alt: 'Snippet library searched for “how to connect to a database”, showing two matching snippets with match scores',
-    repo: 'https://github.com/EthanYap123/ai-code-snippet-hub', live: 'https://ethanyap123.github.io/ai-code-snippet-hub/' },
+    repo: 'https://github.com/EthanYap123/ai-code-snippet-hub', live: 'https://ai-code-snippet-hub.vercel.app/', demo: 'https://ethanyap123.github.io/ai-code-snippet-hub/' },
 
   { id: 'rag', short: 'RAG Search', featured: true, title: 'Academic Resource RAG Search Engine', kind: 'Personal project', tags: ['fullstack','ai'],
     summary: 'Ask questions about policy handbooks and get answers built only from the documents, each claim cited to its page and section.',
@@ -805,7 +805,7 @@ const SKILLS = [
     ['Chart.js & Recharts', ['retail','trend']], ['Responsive & accessible UI', ['mylearning','wellness']], ['Java Swing', ['internship']] ] },
   { group: 'DevOps & deployment', items: [
     ['Docker & Compose', ['incident']], ['nginx', ['incident']], ['GitHub Actions CI/CD', ['incident','rag','trend']],
-    ['GitHub Pages', 'All eight live demos'], ['Git & GitHub', 'Every project'] ] },
+    ['GitHub Pages', 'All eight live demos'], ['Vercel & Neon', ['snippet']], ['Git & GitHub', 'Every project'] ] },
   { group: 'Testing, design & tools', items: [
     ['pytest', ['rag','trend']], ['Jest, Supertest & node:test', ['incident']], ['Zod validation', ['snippet']],
     ['Figma & usability testing', ['mylearning']], ['Microsoft Power BI', ''] ] },
@@ -842,7 +842,8 @@ const lesson = p => `
   </div>`;
 const stack = p => `<ul class="tags" aria-label="Tech stack">${p.stack.map(s => `<li>${esc(s)}</li>`).join('')}</ul>`;
 const actions = p => `<div class="actions">
-    ${p.live ? `<a class="pill dark btn" href="${esc(p.live)}" ${ext}>Live demo ↗</a>` : ''}
+    ${p.live ? `<a class="pill dark btn" href="${esc(p.live)}" ${ext}>${p.demo ? 'Live app' : 'Live demo'} ↗</a>` : ''}
+    ${p.demo ? `<a class="pill light btn" href="${esc(p.demo)}" ${ext}>Browser demo ↗</a>` : ''}
     ${p.repo ? `<a class="pill light btn" href="${esc(p.repo)}" ${ext}>Source code ↗</a>` : ''}
   </div>`;
 const build = p => `
