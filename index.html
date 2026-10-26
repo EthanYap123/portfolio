@@ -436,7 +436,7 @@ footer div { display: flex; gap: 20px; }
     <dl class="facts">
       <div><dt>Diploma in IT, Singapore Polytechnic</dt><dd>Year 2</dd></div>
       <div><dt>Year 1 GPA, out of 4.00</dt><dd>3.49</dd></div>
-      <div><dt>Projects with a live demo</dt><dd>8</dd></div>
+      <div><dt>Projects with a live demo</dt><dd>9</dd></div>
       <div><dt>Expected graduation</dt><dd>2028</dd></div>
     </dl>
   </section>
@@ -734,6 +734,19 @@ const PROJECTS = [
     img: 'assets/trend-sentiment-tracker.jpg', alt: 'Sentiment dashboard with KPI cards, a sentiment-over-time chart, daily volume by polarity and a list of top trending keywords',
     repo: 'https://github.com/EthanYap123/trend-sentiment-tracker', live: 'https://ethanyap123.github.io/trend-sentiment-tracker/' },
 
+  { id: 'steady', short: 'Steady', title: 'Steady: Weight & Calorie Tracker', kind: 'Personal project', tags: ['fullstack'],
+    summary: 'All-in-one health tracker I use myself: type “1 bowl white rice” to log exact grams and calories, plus water, exercise, sleep, mood, BMI, body fat, a fasting timer and a weekly report, with a target that adapts to how my weight actually moves.',
+    lesson: 'Accuracy comes from grams, not names.',
+    learned: '“A bowl of rice” means nothing until it has a weight, so every food stores values per 100 g with real portion sizes. BMR formulas were also 10–20% off for one person, so the app measures maintenance from my own logs.',
+    built: [
+      ['Gram-accurate food log', 'Wrote a parser that turns “half a plate of chicken rice”, “150g chicken breast” or “300ml milk” into grams over 242 built-in foods stored per 100 g, then searches about 400,000 more in USDA FoodData Central and Open Food Facts by name or barcode, with typo-tolerant ranking and a test that checks every food’s calories against its macros.'],
+      ['Adaptive target', 'Estimated real maintenance as average intake minus weight change × 7,700 kcal/kg over four weeks, on an exponentially smoothed weight trend and least-squares pace, and checked it against simulated data with a known 2,500 kcal answer.'],
+      ['API, app and demo', 'Served it through an Express 5 API on SQLite (node:sqlite) with a vanilla-JS UI, hand-drawn SVG charts, water, sleep and MET-based exercise logs, a weekly report, calendar reminders, BMI with Singapore cut-offs, US Navy body fat and a fasting timer. The installable, offline Pages build runs the same core on localStorage, kept in step by a parity test among 122 node:test tests in CI.'],
+    ],
+    stack: ['Node.js','Express','SQLite','JavaScript','PWA','node:test','GitHub Actions'],
+    img: 'assets/calorie-weight-tracker.jpg', alt: 'Today view with a calorie ring showing 1,038 kcal left and breakfast entries logged by amount, such as 1 glass (250 ml) of low fat milk',
+    repo: 'https://github.com/EthanYap123/calorie-weight-tracker', live: 'https://ethanyap123.github.io/calorie-weight-tracker/?demo' },
+
   { id: 'mylearning', short: 'MyLearningAI', title: 'MyLearningAI Study App', kind: 'Group project', tags: ['frontend'],
     summary: 'Mobile-first prototype of an AI-assisted learning app, built from our group’s UX design and usability testing.',
     role: 'Designed with Chloe, Ying En and Brian. I turned our design into the working app.',
@@ -798,16 +811,16 @@ const SKILLS = [
     ['Node.js & Express', ['pokemon','incident','retail']], ['FastAPI', ['rag','trend']], ['REST API design', ['pokemon','snippet','rag']],
     ['WebSockets', ['incident']], ['JWT & bcrypt auth', ['pokemon']], ['Job queues & schedulers', ['snippet','trend']] ] },
   { group: 'Data & AI', items: [
-    ['PostgreSQL & pgvector', ['snippet','incident']], ['MySQL & SQLite', ['pokemon','trend']], ['pandas & ETL pipelines', ['trend']],
+    ['PostgreSQL & pgvector', ['snippet','incident']], ['MySQL & SQLite', ['pokemon','trend','steady']], ['pandas & ETL pipelines', ['trend']],
     ['Embeddings, RAG & ChromaDB', ['rag','snippet']], ['LLM APIs (Gemini)', ['snippet','rag']], ['Sentiment analysis', ['trend']] ] },
   { group: 'Frontend', items: [
     ['React & Next.js', ['incident','snippet','trend']], ['Tailwind CSS & Bootstrap 5', ['incident','snippet','wellness']], ['Web Components', ['retail']],
     ['Chart.js & Recharts', ['retail','trend']], ['Responsive & accessible UI', ['mylearning','wellness']], ['Java Swing', ['internship']] ] },
   { group: 'DevOps & deployment', items: [
     ['Docker & Compose', ['incident']], ['nginx', ['incident']], ['GitHub Actions CI/CD', ['incident','rag','trend']],
-    ['GitHub Pages', 'All eight live demos'], ['Vercel & Neon', ['snippet']], ['Git & GitHub', 'Every project'] ] },
+    ['GitHub Pages', 'All nine live demos'], ['Vercel & Neon', ['snippet']], ['Git & GitHub', 'Every project'] ] },
   { group: 'Testing, design & tools', items: [
-    ['pytest', ['rag','trend']], ['Jest, Supertest & node:test', ['incident']], ['Zod validation', ['snippet']],
+    ['pytest', ['rag','trend']], ['Jest, Supertest & node:test', ['incident','steady']], ['Zod validation', ['snippet']],
     ['Figma & usability testing', ['mylearning']], ['Microsoft Power BI', ''] ] },
 ];
 
