@@ -665,18 +665,18 @@ footer div { display: flex; gap: 20px; }
 // built: [heading, detail] pairs for "How I built it". stats: [value, label] pairs.
 const PROJECTS = [
   { id: 'pokemon', short: 'Pokémon', featured: true, title: 'Pokémon Gym & Battle System', kind: 'Year 1 school project, rebuilt', tags: ['fullstack'],
-    summary: 'Full-stack Pokémon game with turn-based gym battles, a gacha shop and a REST API over MySQL.',
+    summary: 'Full-stack Pokémon game with turn-based gym battles, a gacha shop and a REST API over PostgreSQL, live on Vercel with Neon.',
     stats: [['45', 'REST API endpoints'], ['JWT', 'login with ownership checks on player routes'], ['1,000s', 'of simulated battles to balance the gyms']],
     lesson: 'Logging in isn’t the same as being allowed.',
     learned: 'My Year 1 version only checked that a token was valid, not whose it was, so I added ownership checks to every player route and ran each purchase as one database transaction.',
     built: [
-      ['Secure REST API', 'Built a full-stack web game on an Express REST API over MySQL, with JWT login, bcrypt password hashing and ownership checks on every player route.'],
+      ['Secure REST API', 'Built a full-stack web game on an Express REST API, ported from MySQL to PostgreSQL and deployed on Vercel with Neon, with JWT login, bcrypt password hashing, ownership checks on every player route and database-backed rate limits.'],
       ['Battle engine', 'Wrote a turn-based battle engine using the main-series damage formula, type effectiveness, priority moves and switching, with gym levels tuned by simulating thousands of battles.'],
       ['Gacha shop and fixes', 'Added a gacha shop with 10-pulls, a pity counter and a daily free ball, each run as a single database transaction, and fixed reward exploits and crashing endpoints in the Year 1 version.'],
     ],
-    stack: ['Node.js','Express','MySQL','JWT','bcrypt','JavaScript'],
+    stack: ['Node.js','Express','PostgreSQL','JWT','bcrypt','Vercel','Neon'],
     img: 'assets/pokemon-battle-system.jpg', alt: 'Battle screen with Charmander facing Brock’s Geodude, HP bars, a battle log and the move menu',
-    repo: 'https://github.com/EthanYap123/pokemon-gamified-battle-system', live: 'https://ethanyap123.github.io/pokemon-gamified-battle-system/' },
+    repo: 'https://github.com/EthanYap123/pokemon-gamified-battle-system', live: 'https://pokemon-gamified-battle-system-eta.vercel.app/', demo: 'https://ethanyap123.github.io/pokemon-gamified-battle-system/' },
 
   { id: 'incident', short: 'Incident Monitor', featured: true, title: 'Incident Monitoring Dashboard', kind: 'Personal project', tags: ['fullstack'],
     summary: 'Containerized observability stack that simulates service telemetry, raises alerts and streams them to a live dashboard.',
@@ -811,14 +811,14 @@ const SKILLS = [
     ['Node.js & Express', ['pokemon','incident','retail']], ['FastAPI', ['rag','trend']], ['REST API design', ['pokemon','snippet','rag']],
     ['WebSockets', ['incident']], ['JWT & bcrypt auth', ['pokemon']], ['Job queues & schedulers', ['snippet','trend']] ] },
   { group: 'Data & AI', items: [
-    ['PostgreSQL & pgvector', ['snippet','incident']], ['MySQL & SQLite', ['pokemon','trend','steady']], ['pandas & ETL pipelines', ['trend']],
+    ['PostgreSQL & pgvector', ['snippet','pokemon','incident']], ['SQLite', ['trend','steady']], ['pandas & ETL pipelines', ['trend']],
     ['Embeddings, RAG & ChromaDB', ['rag','snippet']], ['LLM APIs (Gemini)', ['snippet','rag']], ['Sentiment analysis', ['trend']] ] },
   { group: 'Frontend', items: [
     ['React & Next.js', ['incident','snippet','trend']], ['Tailwind CSS & Bootstrap 5', ['incident','snippet','wellness']], ['Web Components', ['retail']],
     ['Chart.js & Recharts', ['retail','trend']], ['Responsive & accessible UI', ['mylearning','wellness']], ['Java Swing', ['internship']] ] },
   { group: 'DevOps & deployment', items: [
     ['Docker & Compose', ['incident']], ['nginx', ['incident']], ['GitHub Actions CI/CD', ['incident','rag','trend']],
-    ['GitHub Pages', 'All nine live demos'], ['Vercel & Neon', ['snippet']], ['Git & GitHub', 'Every project'] ] },
+    ['GitHub Pages', 'All nine live demos'], ['Vercel & Neon', ['snippet','pokemon']], ['Git & GitHub', 'Every project'] ] },
   { group: 'Testing, design & tools', items: [
     ['pytest', ['rag','trend']], ['Jest, Supertest & node:test', ['incident','steady']], ['Zod validation', ['snippet']],
     ['Figma & usability testing', ['mylearning']], ['Microsoft Power BI', ''] ] },
