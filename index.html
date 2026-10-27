@@ -741,11 +741,11 @@ const PROJECTS = [
     built: [
       ['Gram-accurate food log', 'Wrote a parser that turns “half a plate of chicken rice”, “150g chicken breast” or “300ml milk” into grams over 242 built-in foods stored per 100 g, then searches about 400,000 more in USDA FoodData Central and Open Food Facts by name or barcode, with typo-tolerant ranking and a test that checks every food’s calories against its macros.'],
       ['Adaptive target', 'Estimated real maintenance as average intake minus weight change × 7,700 kcal/kg over four weeks, on an exponentially smoothed weight trend and least-squares pace, and checked it against simulated data with a known 2,500 kcal answer.'],
-      ['API, app and demo', 'Served it through an Express 5 API on SQLite (node:sqlite) with a vanilla-JS UI, hand-drawn SVG charts, water, sleep and MET-based exercise logs, a weekly report, calendar reminders, BMI with Singapore cut-offs, US Navy body fat and a fasting timer. The installable, offline Pages build runs the same core on localStorage, kept in step by a parity test among 122 node:test tests in CI.'],
+      ['Synced app and demo', 'Deployed it on Vercel with Neon Postgres so my log syncs between phone and laptop, with bcrypt and JWT accounts, every query scoped to the logged-in user, database-backed rate limits and import from the browser version. It also has a vanilla-JS UI, hand-drawn SVG charts, water, sleep and MET-based exercise logs, a weekly report, BMI with Singapore cut-offs and a fasting timer. The offline Pages demo runs the same core on localStorage, kept in step by parity tests among 139 node:test tests run on real Postgres in CI.'],
     ],
-    stack: ['Node.js','Express','SQLite','JavaScript','PWA','node:test','GitHub Actions'],
+    stack: ['Node.js','Express','PostgreSQL','JWT','bcrypt','Vercel','Neon','PWA','node:test'],
     img: 'assets/calorie-weight-tracker.jpg', alt: 'Today view with a calorie ring showing 1,038 kcal left and breakfast entries logged by amount, such as 1 glass (250 ml) of low fat milk',
-    repo: 'https://github.com/EthanYap123/calorie-weight-tracker', live: 'https://ethanyap123.github.io/calorie-weight-tracker/?demo' },
+    repo: 'https://github.com/EthanYap123/calorie-weight-tracker', live: 'https://calorie-weight-tracker.vercel.app/', demo: 'https://ethanyap123.github.io/calorie-weight-tracker/?demo' },
 
   { id: 'mylearning', short: 'MyLearningAI', title: 'MyLearningAI Study App', kind: 'Group project', tags: ['frontend'],
     summary: 'Mobile-first prototype of an AI-assisted learning app, built from our group’s UX design and usability testing.',
@@ -809,9 +809,9 @@ const SKILLS = [
     ['Java', ['internship']], ['SQL', ['pokemon','snippet','trend']], ['HTML5 & CSS3', ['mylearning','wellness','retail']] ] },
   { group: 'Backend & APIs', items: [
     ['Node.js & Express', ['pokemon','incident','retail']], ['FastAPI', ['rag','trend']], ['REST API design', ['pokemon','snippet','rag']],
-    ['WebSockets', ['incident']], ['JWT & bcrypt auth', ['pokemon']], ['Job queues & schedulers', ['snippet','trend']] ] },
+    ['WebSockets', ['incident']], ['JWT & bcrypt auth', ['pokemon','steady']], ['Job queues & schedulers', ['snippet','trend']] ] },
   { group: 'Data & AI', items: [
-    ['PostgreSQL & pgvector', ['snippet','pokemon','incident']], ['SQLite', ['trend','steady']], ['pandas & ETL pipelines', ['trend']],
+    ['PostgreSQL & pgvector', ['snippet','pokemon','incident','steady']], ['SQLite', ['trend']], ['pandas & ETL pipelines', ['trend']],
     ['Embeddings, RAG & ChromaDB', ['rag','snippet']], ['LLM APIs (Gemini)', ['snippet','rag']], ['Sentiment analysis', ['trend']] ] },
   { group: 'Frontend', items: [
     ['React & Next.js', ['incident','snippet','trend']], ['Tailwind CSS & Bootstrap 5', ['incident','snippet','wellness']], ['Web Components', ['retail']],
