@@ -113,7 +113,8 @@ a:hover { color: var(--accent); }
 /* Hero */
 .hero { display: grid; grid-template-columns: minmax(0,1fr); grid-template-areas: "status" "title" "copy" "facts"; gap: 32px; padding-top: clamp(48px,7vw,88px); padding-bottom: clamp(64px,8vw,104px); }
 .status { grid-area: status; display: inline-flex; justify-self: start; align-items: center; gap: 10px; padding: 7px 14px 7px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; font-size: 13px; color: var(--ink-2); box-shadow: 0 1px 2px rgba(28,27,24,.04); }
-.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); animation: pulse 2.4s ease-in-out infinite; }
+.dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--ok); animation: pulse 2.4s ease-in-out infinite; }
+.status-dates { white-space: nowrap; }
 h1 { grid-area: title; margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(52px,8.4vw,116px); line-height: .95; letter-spacing: -.025em; text-wrap: balance; }
 h1 em { white-space: nowrap; color: var(--accent); }
 .hero-copy { grid-area: copy; display: flex; flex-direction: column; gap: 32px; align-self: start; }
@@ -423,7 +424,7 @@ footer div { display: flex; gap: 20px; }
 
 <main>
   <section id="top" class="hero wrap" aria-label="Introduction">
-    <div class="status"><span class="dot" aria-hidden="true"></span>Open to software engineering internships</div>
+    <div class="status"><span class="dot" aria-hidden="true"></span><span>Open to software engineering internships · <span class="status-dates">Mar 2027 – Jan 2028</span></span></div>
     <h1>Ethan Yap builds <em>full-stack</em> web&nbsp;apps.</h1>
     <div class="hero-copy">
       <p class="lede">I’m a Year 2 IT student at Singapore Polytechnic. I build complete apps, from the database and API to the interface and deployment, with Node.js, Next.js, Python, PostgreSQL and Docker. Every web project below has a live demo you can open right now.</p>
@@ -507,7 +508,7 @@ footer div { display: flex; gap: 20px; }
           <div><dt>Studying</dt><dd>Diploma in IT, Year 2</dd></div>
           <div><dt>Minor</dt><dd>Business</dd></div>
           <div><dt>Languages</dt><dd>English, Mandarin</dd></div>
-          <div><dt>Looking for</dt><dd>Software engineering internship</dd></div>
+          <div><dt>Looking for</dt><dd>44-week software engineering internship, 15 Mar 2027 – 14 Jan 2028</dd></div>
         </dl>
       </div>
     </div>
@@ -673,7 +674,7 @@ footer div { display: flex; gap: 20px; }
       <span class="label">Contact</span>
       <h2 id="contact-title">Have an internship role? <em>Let’s talk.</em></h2>
       <div class="contact-row">
-        <p>I’m looking for a software engineering internship. Email me, or find me on LinkedIn and GitHub.</p>
+        <p>I’m looking for a 44-week software engineering internship from 15 Mar 2027 to 14 Jan 2028. Email me, or find me on LinkedIn and GitHub.</p>
         <div class="contact-actions">
           <div class="email">
             <a href="mailto:ethanyapschool@gmail.com">ethanyapschool@gmail.com</a>
