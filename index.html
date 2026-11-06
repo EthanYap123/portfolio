@@ -159,6 +159,14 @@ h1 em { white-space: nowrap; color: var(--accent); }
 .group-title { margin: 0 0 20px; font-family: var(--serif); font-weight: 400; font-size: clamp(30px,3.4vw,40px); letter-spacing: -.01em; }
 .more { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,440px),1fr)); align-items: start; gap: 20px; }
 .project.flash { animation: flash 1.8s ease-out; }
+.building { margin-top: 56px; }
+.building .group-title { margin-bottom: 10px; }
+.building-intro { margin: 0 0 20px; max-width: 40em; font-size: 16px; line-height: 1.6; color: var(--muted); text-wrap: pretty; }
+.building-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,320px),1fr)); gap: 16px; }
+.building-list > li { padding: 22px 24px; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.building-list strong { font-family: var(--serif); font-weight: 400; font-size: 26px; line-height: 1.1; }
+.building-list > li > span { font-size: 15px; line-height: 1.55; color: var(--ink-2); text-wrap: pretty; }
+.building-list .btn { margin-top: auto; }
 
 .feature { display: grid; grid-template-columns: minmax(0,1fr); gap: 28px; padding: clamp(14px,2vw,24px); }
 .feature-media { display: flex; flex-direction: column; gap: 14px; }
@@ -435,7 +443,7 @@ footer div { display: flex; gap: 20px; }
     </div>
     <dl class="facts">
       <div><dt>Diploma in IT, Singapore Polytechnic</dt><dd>Year 2</dd></div>
-      <div><dt>Year 1 GPA, out of 4.00</dt><dd>3.49</dd></div>
+      <div><dt>Cumulative GPA, out of 4.00</dt><dd>3.43</dd></div>
       <div><dt>Projects with a live demo</dt><dd>9</dd></div>
       <div><dt>Expected graduation</dt><dd>2028</dd></div>
     </dl>
@@ -458,6 +466,30 @@ footer div { display: flex; gap: 20px; }
     <div class="group" id="more-group">
       <h3 class="group-title">More projects</h3>
       <div class="more" id="more"></div>
+    </div>
+    <div class="building" id="building">
+      <h3 class="group-title">Currently building</h3>
+      <p class="building-intro">Longer projects I’m working through in phases, with issues, pull requests and required CI checks. They aren’t finished yet, so follow along on GitHub.</p>
+      <ul class="building-list">
+        <li class="card">
+          <strong>Slotted</strong>
+          <span>A booking system for study rooms, courts and meeting rooms. Accounts, roles, conflict-free booking, blackouts and recurring bookings work, with 184 tests on the API. Waitlists, check-in and email are next.</span>
+          <ul class="tags" aria-label="Tech stack"><li>Spring Boot</li><li>Java 21</li><li>PostgreSQL</li><li>React</li><li>TypeScript</li></ul>
+          <a class="pill light btn" href="https://github.com/EthanYap123/slotted" target="_blank" rel="noopener">Source code ↗</a>
+        </li>
+        <li class="card">
+          <strong>Pulse</strong>
+          <span>Uptime monitoring with public status pages. Scheduled checks, incidents, Discord alerts and status pages work locally, and I’m now deploying it.</span>
+          <ul class="tags" aria-label="Tech stack"><li>Next.js</li><li>Fastify</li><li>Prisma</li><li>Cloudflare Workers</li><li>PostgreSQL</li></ul>
+          <a class="pill light btn" href="https://github.com/EthanYap123/pulse" target="_blank" rel="noopener">Source code ↗</a>
+        </li>
+        <li class="card">
+          <strong>SG Transit Companion</strong>
+          <span>A mobile-first app for live Singapore bus arrivals on LTA DataMall. Stop search and live arrivals work locally, with 226 tests. Accounts and favourites are in progress.</span>
+          <ul class="tags" aria-label="Tech stack"><li>Next.js</li><li>Express</li><li>TypeScript</li><li>Redis</li><li>PostgreSQL</li></ul>
+          <a class="pill light btn" href="https://github.com/EthanYap123/sg-transit-companion" target="_blank" rel="noopener">Source code ↗</a>
+        </li>
+      </ul>
     </div>
   </section>
 
@@ -510,7 +542,7 @@ footer div { display: flex; gap: 20px; }
         </div>
 
         <div class="habit-panel" role="tabpanel" id="habit-2" aria-labelledby="habit-tab-2" tabindex="0" hidden>
-          <p>Every web project here runs as a free live demo. For apps that need a server, I port the backend to run in the browser, so anyone can click through without an account.</p>
+          <p>Every web project here has a free live demo. Pokémon, Snippet Hub and Steady also run on real servers with Vercel and Neon. When an app needs a server, I port its backend to run in the browser too, so anyone can click through without an account.</p>
           <ul class="evidence">
             <li><a class="row" href="https://ethanyap123.github.io/ai-code-snippet-hub/" target="_blank" rel="noopener"><strong>Snippet Hub</strong><span>Postgres and pgvector run in your browser on PGlite.</span><em>Try it ↗</em></a></li>
             <li><a class="row" href="https://ethanyap123.github.io/academic-rag-search/" target="_blank" rel="noopener"><strong>RAG Search</strong><span>Embeddings and PDF reading run in your browser with transformers.js and pdf.js.</span><em>Try it ↗</em></a></li>
@@ -536,12 +568,15 @@ footer div { display: flex; gap: 20px; }
         <div class="habit-panel" role="tabpanel" id="habit-4" aria-labelledby="habit-tab-4" tabindex="0" hidden>
           <p>Tests run in GitHub Actions on every push to main. In RAG Search and Trend Tracker, a failing test blocks the deploy, so a broken change never reaches the live demo.</p>
           <ol class="ci" id="ci">
+            <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Steady</strong><span>140 node:test tests, run on real Postgres, including parity tests between the app and its browser demo</span><em class="ci-state">passed</em></li>
+            <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Snippet Hub</strong><span>73 tests, alongside type checking and linting</span><em class="ci-state">passed</em></li>
+            <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Pokémon</strong><span>20 API tests against a real PostgreSQL</span><em class="ci-state">passed</em></li>
             <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>RAG Search</strong><span>26 pytest tests for ingestion, retrieval, answers and the API</span><em class="ci-state">passed</em></li>
             <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Trend Tracker</strong><span>18 pytest tests, including a parity test of the dashboard’s JavaScript against the Python analytics</span><em class="ci-state">passed</em></li>
             <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Incident Monitor</strong><span>15 unit tests for the alert engine and telemetry simulator</span><em class="ci-state">passed</em></li>
             <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Incident Monitor</strong><span>A smoke test that boots all five containers with Docker Compose</span><em class="ci-state">passed</em></li>
           </ol>
-          <div class="ci-foot"><button type="button" class="replay" id="ci-replay">▶ Replay a run</button><span class="ci-status" id="ci-status" aria-live="polite">4 of 4 checks passed</span></div>
+          <div class="ci-foot"><button type="button" class="replay" id="ci-replay">▶ Replay a run</button><span class="ci-status" id="ci-status" aria-live="polite">7 of 7 checks passed</span></div>
         </div>
       </div>
     </section>
@@ -553,7 +588,7 @@ footer div { display: flex; gap: 20px; }
         <span class="label">Skills</span>
         <h2 class="h2" id="skills-title">What I work with.</h2>
       </div>
-      <p class="section-intro">Every skill links to the place on this page where I’ve used it, so you can see it in action.</p>
+      <p class="section-intro">Every skill points to where I’ve used it, so you can see it in action.</p>
     </div>
     <div class="skills" id="skills-grid"></div>
     <div class="soft-head">
@@ -567,7 +602,7 @@ footer div { display: flex; gap: 20px; }
       <li class="card"><strong>Time management</strong><span>A working build seven days before every deadline, while holding a part-time job alongside my diploma.</span><span class="proof"><a href="#how">How I work</a><a href="#jobs">Work experience</a></span></li>
       <li class="card"><strong>Working under pressure</strong><span>Kept orders accurate and moving on busy kitchen lines, through peak service and the festive rush.</span><span class="proof"><a href="#jobs">Work experience</a></span></li>
       <li class="card"><strong>Leadership &amp; mentoring</strong><span>Class Chairman and Peer Supporter, and mentored juniors in the Robotics &amp; Programming Club.</span><span class="proof"><a href="#leadership">Leadership</a></span></li>
-      <li class="card"><strong>Initiative</strong><span>Built four projects outside class, rebuilt my Year 1 work and put every web project online as a free live demo.</span><span class="proof"><a href="#work">Projects</a></span></li>
+      <li class="card"><strong>Initiative</strong><span>Built five projects outside class, rebuilt my Year 1 work and put every web project online as a free live demo.</span><span class="proof"><a href="#work">Projects</a></span></li>
       <li class="card"><strong>Learning from feedback</strong><span>Ran usability tests on MyLearningAI and changed the design where testers got stuck.</span><span class="proof"><a href="#p-mylearning">MyLearningAI</a></span></li>
       <li class="card"><strong>Customer focus</strong><span>Served high-volume crowds at the register and barista station, and ran registration for community events of 100+ people.</span><span class="proof"><a href="#jobs">Work experience</a><a href="#leadership">Community service</a></span></li>
     </ul>
@@ -586,8 +621,8 @@ footer div { display: flex; gap: 20px; }
         <div class="cv-items">
           <div class="cv-item">
             <div class="cv-top"><h4>Singapore Polytechnic</h4><span class="meta">Apr 2025 – 2028 (expected)</span></div>
-            <p class="sub">Diploma in Information Technology, Minor in Business · <strong>GPA 3.49 / 4.00</strong> (Year 1)</p>
-            <p>Key modules: Back-End Development, Java Programming, Continuous Integration &amp; Development, Software Engineering Principles, Design User Experience &amp; Interface</p>
+            <p class="sub">Diploma in Information Technology (Software and Applications), Minor in Business · <strong>Cumulative GPA 3.43 / 4.00</strong></p>
+            <p>Key modules: Back-End Web Development, Java Programming, Continuous Integration and Continuous Delivery, Fundamentals of Programming, Design for User Interaction</p>
           </div>
           <div class="cv-item">
             <div class="cv-top"><h4>Maris Stella High School</h4><span class="meta">2021 – 2024</span></div>
@@ -809,7 +844,8 @@ const SKILLS = [
     ['Java', ['internship']], ['SQL', ['pokemon','snippet','trend']], ['HTML5 & CSS3', ['mylearning','wellness','retail']] ] },
   { group: 'Backend & APIs', items: [
     ['Node.js & Express', ['pokemon','incident','retail']], ['FastAPI', ['rag','trend']], ['REST API design', ['pokemon','snippet','rag']],
-    ['WebSockets', ['incident']], ['JWT & bcrypt auth', ['pokemon','steady']], ['Job queues & schedulers', ['snippet','trend']] ] },
+    ['WebSockets', ['incident']], ['JWT & bcrypt auth', ['pokemon','steady']], ['Job queues & schedulers', ['snippet','trend']],
+    ['Spring Boot', 'Slotted, in progress'] ] },
   { group: 'Data & AI', items: [
     ['PostgreSQL & pgvector', ['snippet','pokemon','incident','steady']], ['SQLite', ['trend']], ['pandas & ETL pipelines', ['trend']],
     ['Embeddings, RAG & ChromaDB', ['rag','snippet']], ['LLM APIs (Gemini)', ['snippet','rag']], ['Sentiment analysis', ['trend']] ] },
@@ -817,11 +853,11 @@ const SKILLS = [
     ['React & Next.js', ['incident','snippet','trend']], ['Tailwind CSS & Bootstrap 5', ['incident','snippet','wellness']], ['Web Components', ['retail']],
     ['Chart.js & Recharts', ['retail','trend']], ['Responsive & accessible UI', ['mylearning','wellness']], ['Java Swing', ['internship']] ] },
   { group: 'DevOps & deployment', items: [
-    ['Docker & Compose', ['incident']], ['nginx', ['incident']], ['GitHub Actions CI/CD', ['incident','rag','trend','pokemon']],
+    ['Docker & Compose', ['incident']], ['nginx', ['incident']], ['GitHub Actions CI/CD', ['steady','snippet','pokemon','rag','trend','incident']],
     ['GitHub Pages', 'All nine live demos'], ['Vercel & Neon', ['snippet','pokemon','steady']], ['Git & GitHub', 'Every project'] ] },
   { group: 'Testing, design & tools', items: [
-    ['pytest', ['rag','trend']], ['node:test', ['incident','steady','pokemon']], ['Zod validation', ['snippet']],
-    ['Figma & usability testing', ['mylearning']], ['Microsoft Power BI', ''] ] },
+    ['pytest', ['rag','trend']], ['node:test', ['steady','snippet','pokemon','incident']], ['Zod validation', ['snippet']],
+    ['Figma & usability testing', ['mylearning']] ] },
 ];
 
 const FILTERS = [
