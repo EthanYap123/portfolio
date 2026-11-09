@@ -578,7 +578,7 @@ footer div { display: flex; gap: 20px; }
             <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Snippet Hub</strong><span>73 tests, alongside type checking and linting</span><em class="ci-state">passed</em></li>
             <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Pokémon</strong><span>20 API tests against a real PostgreSQL</span><em class="ci-state">passed</em></li>
             <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>RAG Search</strong><span>26 pytest tests for ingestion, retrieval, answers and the API</span><em class="ci-state">passed</em></li>
-            <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Trend Tracker</strong><span>18 pytest tests, including a parity test of the dashboard’s JavaScript against the Python analytics</span><em class="ci-state">passed</em></li>
+            <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Trend Tracker</strong><span>26 pytest tests, including a parity test of the dashboard’s JavaScript against the Python analytics</span><em class="ci-state">passed</em></li>
             <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Incident Monitor</strong><span>15 unit tests for the alert engine and telemetry simulator</span><em class="ci-state">passed</em></li>
             <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Incident Monitor</strong><span>A smoke test that boots all five containers with Docker Compose</span><em class="ci-state">passed</em></li>
           </ol>
@@ -708,7 +708,7 @@ footer div { display: flex; gap: 20px; }
 const PROJECTS = [
   { id: 'pokemon', short: 'Pokémon', featured: true, title: 'Pokémon Gym & Battle System', kind: 'Year 1 school project, rebuilt', tags: ['fullstack'],
     summary: 'Full-stack Pokémon game with turn-based gym battles, a gacha shop and a REST API over PostgreSQL, live on Vercel with Neon. A one-click demo login lets visitors play without signing up.',
-    stats: [['45', 'REST API endpoints'], ['20', 'API tests run in CI'], ['1,000s', 'of simulated battles to balance the gyms']],
+    stats: [['49', 'REST API endpoints'], ['20', 'API tests run in CI'], ['1,000s', 'of simulated battles to balance the gyms']],
     lesson: 'Logging in isn’t the same as being allowed.',
     learned: 'My Year 1 version only checked that a token was valid, not whose it was, so I added ownership checks to every player route and ran each purchase as one database transaction.',
     built: [
