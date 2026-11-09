@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rebuilding my Year 1 projects properly · Notes · Ethan Yap</title>
+<meta name="description" content="Three Year 1 projects passed their assignments but weren’t ready for real users. What was wrong with the Pokémon API, the retail dashboard and the wellness site, and how I fixed them.">
+<meta name="theme-color" content="#f5f2ec">
+<link rel="canonical" href="https://ethanyap123.github.io/portfolio/notes/rebuilding-year-1.html">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://ethanyap123.github.io/portfolio/notes/rebuilding-year-1.html">
+<meta property="og:title" content="Rebuilding my Year 1 projects properly">
+<meta property="og:description" content="What was wrong with three Year 1 projects, how I fixed them, and the habits I kept.">
+<meta property="og:image" content="https://ethanyap123.github.io/portfolio/assets/og-preview.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+<link rel="stylesheet" href="../assets/case-study.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="site-header">
+  <nav aria-label="Main">
+    <a href="../" class="brand"><span class="mark" aria-hidden="true">E</span><span>Ethan Yap</span></a>
+    <div class="nav-links">
+      <a href="../#work">Work</a>
+      <a href="./" class="hide-sm">Notes</a>
+      <a href="../#contact" class="pill dark">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<main class="wrap" id="content">
+  <p class="crumbs"><a href="./">Notes</a> / Year 1 rebuilds</p>
+  <article>
+    <header class="cs-head">
+      <span class="label"><time datetime="2026-11-10">10 Nov 2026</time> · 4 min read</span>
+      <h1>Rebuilding my Year 1 projects properly</h1>
+      <p class="lede">Three of my Year 1 projects passed their assignments. None of them were ready for real users. Here’s what was wrong and what I changed.</p>
+    </header>
+
+    <div class="prose note-body">
+      <p>In October 2026 I wanted every web project on my portfolio to have a live demo. That meant opening up code I’d written a year earlier and looking at it the way a stranger would. It was humbling. The problems weren’t exotic: they were the shortcuts you take when the only person using the app is you, the night before a deadline.</p>
+
+      <h2>Pokémon battle API: trusting the client</h2>
+      <p>The API checked that a request had a valid login token but never checked whose it was, so any player could spend another player’s coins by changing the id in the URL. The client also told the server who won each battle, so gym rewards could be claimed for free and more than once. A purchase ran as several separate queries, so a failure halfway through could take the coins without giving the Pokémon.</p>
+      <p>The fixes: an ownership check on every player route, battle results decided on the server, rewards only for a won and unclaimed battle, and each purchase run as one database transaction that locks the player’s row. I also moved it from MySQL to PostgreSQL, deployed it on Vercel with Neon, and added 20 API tests that run in CI. I wrote that part up in <a href="authorisation-hole.html">a separate note</a>.</p>
+
+      <h2>Retail dashboard: hard-coding everything</h2>
+      <p>The front end called a fixed address, <code>http://localhost:8081</code>, so it only worked on my laptop. The payment methods were a hard-coded list, so the page broke as soon as the data held one I hadn’t typed in. On the server, the CSV path only worked from one folder, some number columns were read as text, and a failed load left the server half-started instead of stopping with a clear error.</p>
+      <p>Now the payment methods come from the data, every value is escaped before it goes into the page, and the CSV path works from anywhere. The biggest change was dropping the need for a server at all: a build step packs all 100,000 transactions into a compact JSON file, and a GitHub Actions workflow builds it and deploys the dashboard to GitHub Pages.</p>
+
+      <h2>Mental Wellness Hub: the small things</h2>
+      <p>Every page threw console errors, because one shared script assumed every page had every element. The tips carousel had two active slides, the favicon was missing, the navigation overflowed on phones, and the gratitude journal put whatever you typed straight into the page without escaping it.</p>
+      <p>I split the script per page so each one checks before it runs, escaped user input, and then did the accessibility work I’d skipped entirely in Year 1: labelled controls, live regions, visible focus styles and reduced-motion support. I checked every page at 375 px, 768 px and desktop widths, in light and dark mode.</p>
+
+      <h2>What the three had in common</h2>
+      <ul>
+        <li><strong>Trusting input.</strong> An id in a URL, a battle result from the client, text in a journal: all of it needs checking or escaping before it’s used.</li>
+        <li><strong>Hard-coding what the data can tell you.</strong> Addresses, payment lists and file paths were all fine on my machine and wrong everywhere else.</li>
+        <li><strong>Never running it anywhere else.</strong> Each problem was easy to miss until the app had to work on someone else’s screen.</li>
+      </ul>
+      <p>The habit I’ve kept is to deploy early and test like a stranger. If I were starting these projects again, I’d also write the tests first. In the Pokémon rebuild the tests came a week after the fixes, and they’re the only thing that stops the same holes from coming back.</p>
+    </div>
+  </article>
+
+  <nav class="pager" aria-label="More notes">
+    <a href="authorisation-hole.html"><span class="label">← Previous note</span><strong>How I fixed the authorisation hole in my Pokémon API</strong></a>
+    <a class="next" href="./"><span class="label">Back →</span><strong>All notes</strong></a>
+  </nav>
+</main>
+
+<footer>
+  <span>© 2026 Yap Kai Jun Ethan</span>
+  <div><a href="https://github.com/EthanYap123/portfolio" target="_blank" rel="noopener">Site source ↗</a><a href="#content">Back to top ↑</a></div>
+</footer>
+</body>
+</html>
