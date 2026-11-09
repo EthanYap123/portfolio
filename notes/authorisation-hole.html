@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How I fixed the authorisation hole in my Pokémon API · Notes · Ethan Yap</title>
+<meta name="description" content="My Year 1 Pokémon API checked that a player was logged in, but never checked who they were. How I found the hole, fixed it with an ownership check and kept it fixed with tests.">
+<meta name="theme-color" content="#f5f2ec">
+<link rel="canonical" href="https://ethanyap123.github.io/portfolio/notes/authorisation-hole.html">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://ethanyap123.github.io/portfolio/notes/authorisation-hole.html">
+<meta property="og:title" content="How I fixed the authorisation hole in my Pokémon API">
+<meta property="og:description" content="Logging in isn’t the same as being allowed: an ownership check, a server-side battle result and the tests that keep them in place.">
+<meta property="og:image" content="https://ethanyap123.github.io/portfolio/assets/og-preview.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+<link rel="stylesheet" href="../assets/case-study.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="site-header">
+  <nav aria-label="Main">
+    <a href="../" class="brand"><span class="mark" aria-hidden="true">E</span><span>Ethan Yap</span></a>
+    <div class="nav-links">
+      <a href="../#work">Work</a>
+      <a href="./" class="hide-sm">Notes</a>
+      <a href="../#contact" class="pill dark">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<main class="wrap" id="content">
+  <p class="crumbs"><a href="./">Notes</a> / Pokémon API</p>
+  <article>
+    <header class="cs-head">
+      <span class="label"><time datetime="2026-11-10">10 Nov 2026</time> · 4 min read</span>
+      <h1>How I fixed the authorisation hole in my Pokémon API</h1>
+      <p class="lede">My Year 1 API checked that you were logged in. It never checked who you were.</p>
+    </header>
+
+    <div class="prose note-body">
+      <p>In Year 1 I built a Pokémon battle game for my Back-End Development module: an Express REST API over MySQL, with JWT login and bcrypt password hashing. It did what the assignment asked. I came back to it in October 2026, when I decided to put it online for anyone to play.</p>
+      <p>Putting something on the public internet changes the question you ask of the code. In a demo, the only user is you. On a shared server, any request might come from someone poking at it to see what breaks. So before deploying, I went back through the routes.</p>
+
+      <h2>The hole</h2>
+      <p>Most player routes looked like this:</p>
+<pre><code>router.post('/:user_id/purchase', jwtMiddleware.verifyToken, shopController.purchaseItem);</code></pre>
+      <p><code>verifyToken</code> did its job. It rejected missing or forged tokens and stored the caller’s id in <code>res.locals.userId</code>. But the controller then used <code>req.params.user_id</code>, the number in the URL, and nothing compared the two. A player logged in as user 2 could call <code>/api/shop/7/purchase</code> and spend user 7’s coins. The team routes had the same pattern, so you could rearrange someone else’s team too.</p>
+      <p>There was a second problem in the same spirit. The end-battle endpoint read <code>result</code> from the request body, so a client could simply say it had won and collect the gym reward as often as it liked. And any logged-in player could create or delete gyms.</p>
+      <p>None of this showed up when I tested through the app’s own pages, because they always sent the right id. These bugs only appear once you stop trusting the client.</p>
+
+      <h2>The fix</h2>
+      <p>I added a small middleware that runs after <code>verifyToken</code>. It compares the account in the URL or body with the account in the token and answers <code>403</code> if they differ:</p>
+<pre><code>module.exports.verifyOwner = (req, res, next) =&gt; {
+  const requestedId = req.params.user_id ?? req.body.user_id;
+  if (parseInt(requestedId) !== res.locals.userId) {
+    return res.status(403).json({ message: "Forbidden: Not your account" });
+  }
+  next();
+};</code></pre>
+      <p>It now guards the shop, team, Pokédex and owned-Pokémon routes. Battles are loaded by both their id and the caller’s id, so a battle that isn’t yours simply isn’t found. Routes that change shared game data need an admin id from <code>ADMIN_USER_IDS</code>, and nobody is an admin unless that is set. The server now decides who won, and a reward needs a won, unclaimed battle that belongs to you.</p>
+
+      <h2>Keeping it fixed</h2>
+      <p>A fix without a test can quietly come back. When I added an API test suite, several of its 20 tests exist only to attack these rules: one trainer’s token can’t buy, pick a starter or read a profile on another trainer’s account, only admins can change gyms, and a reward is never paid without a won battle, never twice and never for someone else’s win. They run in GitHub Actions against a real PostgreSQL database on every push and pull request.</p>
+
+      <h2>What I took from it</h2>
+      <p>Authentication answers “who are you?”. Authorisation answers “are you allowed to do this?”. My Year 1 code only asked the first question. Now, whenever I write a route that takes an id, I ask where that id comes from and whether the caller owns it, and I write the test that tries the wrong one.</p>
+      <p>One loose end is left: the profile update and delete routes still check ownership inside the controller instead of using the middleware. They’re protected, but I’d like every rule in one place.</p>
+      <p>The full write-up, with the architecture and the purchase transaction, is in the <a href="../work/pokemon.html">Pokémon case study</a>.</p>
+    </div>
+  </article>
+
+  <nav class="pager" aria-label="More notes">
+    <a href="./"><span class="label">← Back</span><strong>All notes</strong></a>
+    <a class="next" href="rebuilding-year-1.html"><span class="label">Next note →</span><strong>Rebuilding my Year 1 projects properly</strong></a>
+  </nav>
+</main>
+
+<footer>
+  <span>© 2026 Yap Kai Jun Ethan</span>
+  <div><a href="https://github.com/EthanYap123/portfolio" target="_blank" rel="noopener">Site source ↗</a><a href="#content">Back to top ↑</a></div>
+</footer>
+</body>
+</html>
