@@ -134,3 +134,12 @@ footer { max-width: 1180px; margin: 0 auto; padding: 8px var(--gutter) 40px; dis
 footer a { color: var(--faint); }
 footer a:hover { color: var(--ink); }
 footer div { display: flex; gap: 20px; }
+
+/* Notes */
+.note-body { padding-bottom: clamp(56px,8vw,96px); }
+.note-list { list-style: none; margin: 0; padding: 0 0 clamp(56px,8vw,96px); display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,420px),1fr)); gap: 16px; }
+.note-list a { height: 100%; display: flex; flex-direction: column; gap: 12px; padding: 24px 26px 26px; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); }
+.note-list a:hover { border-color: var(--ink); color: var(--ink); }
+.note-list strong { font-family: var(--serif); font-weight: 400; font-size: clamp(26px,2.6vw,32px); line-height: 1.1; text-wrap: balance; }
+.note-list span:not(.label) { font-size: 16px; line-height: 1.6; color: var(--ink-2); text-wrap: pretty; }
+.note-list em { margin-top: auto; font-style: normal; font-size: 14px; font-weight: 500; color: var(--accent-ink); }
