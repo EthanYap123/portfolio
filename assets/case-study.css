@@ -136,7 +136,8 @@ footer a:hover { color: var(--ink); }
 footer div { display: flex; gap: 20px; }
 
 /* Notes */
-.note-body { padding-bottom: clamp(56px,8vw,96px); }
+.note-body { gap: 18px; padding-bottom: clamp(56px,8vw,96px); }
+.note-body h2 { margin-top: 22px; font-size: clamp(28px,3vw,36px); }
 .note-list { list-style: none; margin: 0; padding: 0 0 clamp(56px,8vw,96px); display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,420px),1fr)); gap: 16px; }
 .note-list a { height: 100%; display: flex; flex-direction: column; gap: 12px; padding: 24px 26px 26px; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); }
 .note-list a:hover { border-color: var(--ink); color: var(--ink); }
