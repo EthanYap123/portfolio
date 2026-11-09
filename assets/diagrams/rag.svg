@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 430" width="1040" height="430" role="img" aria-labelledby="t d">
+<title id="t">Academic Resource RAG Search Engine architecture</title>
+<desc id="d">The browser chat UI calls a FastAPI JSON API. Uploads go through ingestion: pypdf reads each page, running headers and page numbers are stripped, and sentence-aligned chunks that never cross a page or section are embedded locally with MiniLM and stored in ChromaDB. Questions retrieve the top 15 chunks, drop any below 0.30 similarity, keep 5, then either Gemini answers citing every claim or an extractive answerer quotes the best sentences.</desc>
+<defs>
+<marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5c574f"/></marker>
+<marker id="tail" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5c574f"/></marker>
+</defs>
+<rect width="1040" height="430" rx="18" fill="#f5f2ec"/>
+<g><rect x="24" y="24" width="220" height="144" rx="14" fill="#ffffff" stroke="#d9d4cb" stroke-width="1.4"/>
+<text x="40" y="46" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="10.5" letter-spacing=".8" fill="#94481a">CLIENT</text>
+<text x="40" y="67" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#1c1b18">Chat UI</text>
+<text x="40" y="94" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Static single-page app</text>
+<text x="40" y="113" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Citation chips beside the</text>
+<text x="40" y="132" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">highlighted source passage</text>
+<text x="40" y="151" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">PDF, Markdown, TXT uploads</text>
+</g>
+<g><rect x="314" y="24" width="340" height="182" rx="14" fill="#fbefe1" stroke="#b45a1f" stroke-width="1.4"/>
+<text x="330" y="46" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="10.5" letter-spacing=".8" fill="#94481a">PYTHON</text>
+<text x="330" y="67" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#1c1b18">FastAPI</text>
+<text x="330" y="94" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="11.5" fill="#3d3a34">POST   /api/ask</text>
+<text x="330" y="113" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="11.5" fill="#3d3a34">POST   /api/search</text>
+<text x="330" y="132" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="11.5" fill="#3d3a34">GET    /api/documents</text>
+<text x="330" y="151" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="11.5" fill="#3d3a34">POST   /api/documents   (upload)</text>
+<text x="330" y="170" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="11.5" fill="#3d3a34">DELETE /api/documents/{doc_id}</text>
+<text x="330" y="189" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="11.5" fill="#3d3a34">GET    /api/documents/{doc_id}/file</text>
+</g>
+<g><rect x="314" y="250" width="160" height="125" rx="14" fill="#ffffff" stroke="#d9d4cb" stroke-width="1.4"/>
+<text x="330" y="272" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="10.5" letter-spacing=".8" fill="#94481a">INGEST.PY</text>
+<text x="330" y="293" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#1c1b18">Ingestion</text>
+<text x="330" y="320" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">pypdf, page by page</text>
+<text x="330" y="339" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Strip headers</text>
+<text x="330" y="358" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">~900-char chunks</text>
+</g>
+<g><rect x="494" y="250" width="160" height="125" rx="14" fill="#ffffff" stroke="#d9d4cb" stroke-width="1.4"/>
+<text x="510" y="272" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="10.5" letter-spacing=".8" fill="#94481a">RAG.PY</text>
+<text x="510" y="293" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#1c1b18">Answering</text>
+<text x="510" y="320" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Top 15, drop &lt; 0.30</text>
+<text x="510" y="339" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Keep 5, re-rank</text>
+<text x="510" y="358" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Cite or refuse</text>
+</g>
+<g><rect x="724" y="24" width="292" height="144" rx="14" fill="#ffffff" stroke="#d9d4cb" stroke-width="1.4"/>
+<text x="740" y="46" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="10.5" letter-spacing=".8" fill="#94481a">ON DISK · DATA_DIR</text>
+<text x="740" y="67" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#1c1b18">ChromaDB</text>
+<text x="740" y="94" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Persistent collection, cosine space</text>
+<text x="740" y="113" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Vector + doc_id, title, page, section</text>
+<text x="740" y="132" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">MiniLM-L6-v2 ONNX, runs locally</text>
+<text x="740" y="151" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Uploaded files + JSON registry</text>
+</g>
+<g><rect x="724" y="270" width="292" height="125" rx="14" fill="#ffffff" stroke="#d9d4cb" stroke-width="1.4" stroke-dasharray="6 5"/>
+<text x="740" y="292" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="10.5" letter-spacing=".8" fill="#94481a">OPTIONAL · GEMINI_API_KEY</text>
+<text x="740" y="313" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#1c1b18">Gemini</text>
+<text x="740" y="340" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Numbered sources, cite every claim</text>
+<text x="740" y="359" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Uncited answers are rejected</text>
+<text x="740" y="378" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">No key: quote best sentences</text>
+</g>
+<path d="M244 90 L314 90" fill="none" stroke="#5c574f" stroke-width="1.6" marker-end="url(#head)"/>
+<rect x="260" y="58" width="38" height="24" rx="7" fill="#f5f2ec"/>
+<text x="279" y="75" text-anchor="middle" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#5c574f">JSON</text>
+<path d="M654 90 L724 90" fill="none" stroke="#5c574f" stroke-width="1.6" marker-end="url(#head)"/>
+<rect x="664" y="42" width="51" height="40" rx="7" fill="#f5f2ec"/>
+<text x="689" y="59" text-anchor="middle" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#5c574f">embed,</text>
+<text x="689" y="75" text-anchor="middle" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#5c574f">query</text>
+<path d="M394 206 L394 250" fill="none" stroke="#5c574f" stroke-width="1.6" marker-end="url(#head)"/>
+<path d="M574 206 L574 250" fill="none" stroke="#5c574f" stroke-width="1.6" marker-end="url(#head)"/>
+<path d="M654 320 L724 320" fill="none" stroke="#5c574f" stroke-width="1.6" marker-end="url(#head)"/>
+</svg>

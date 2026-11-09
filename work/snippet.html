@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Code Snippet &amp; Documentation Hub · Case study · Ethan Yap</title>
+<meta name="description" content="How Ethan Yap built a Next.js and pgvector knowledge base that documents and embeds code with Gemini in the background, using Postgres as a job queue, with 73 tests in CI.">
+<meta name="theme-color" content="#f5f2ec">
+<link rel="canonical" href="https://ethanyap123.github.io/portfolio/work/snippet.html">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://ethanyap123.github.io/portfolio/work/snippet.html">
+<meta property="og:title" content="AI Code Snippet &amp; Documentation Hub · Case study">
+<meta property="og:description" content="How Ethan Yap built a Next.js and pgvector knowledge base that documents and embeds code with Gemini in the background, using Postgres as a job queue, with 73 tests in CI.">
+<meta property="og:image" content="https://ethanyap123.github.io/portfolio/assets/ai-code-snippet-hub.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+<link rel="stylesheet" href="../assets/case-study.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="site-header">
+  <nav aria-label="Main">
+    <a href="../" class="brand"><span class="mark" aria-hidden="true">E</span><span>Ethan Yap</span></a>
+    <div class="nav-links">
+      <a href="../#work">Work</a>
+      <a href="../#about" class="hide-sm">About</a>
+      <a href="../#contact" class="pill dark">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<main class="wrap" id="content">
+  <p class="crumbs"><a href="../#p-snippet">Work</a> / Case study 03</p>
+  <header class="cs-head">
+    <span class="label">Case study · Personal project</span>
+    <h1>AI Code Snippet &amp; Documentation Hub</h1>
+    <p class="lede">Paste a piece of code and it gets documented, tagged and embedded, so you can find it later by describing what it does instead of remembering what you called it.</p>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>Solo: app, database, worker and both deployments</dd></div>
+      <div><dt>When</dt><dd>Built Oct 2026</dd></div>
+      <div><dt>Size</dt><dd>9 tables, 73 tests, 768-dimension vectors</dd></div>
+      <div><dt>Hosting</dt><dd>Vercel + Neon + Gemini, browser demo on GitHub Pages</dd></div>
+    </dl>
+    <div class="actions">
+      <a class="pill dark btn" href="https://ai-code-snippet-hub.vercel.app/" target="_blank" rel="noopener">Live app ↗</a>
+      <a class="pill light btn" href="https://ethanyap123.github.io/ai-code-snippet-hub/" target="_blank" rel="noopener">Browser demo ↗</a>
+      <a class="pill light btn" href="https://github.com/EthanYap123/ai-code-snippet-hub" target="_blank" rel="noopener">Source code ↗</a>
+      <a class="ci-badge" href="https://github.com/EthanYap123/ai-code-snippet-hub/actions/workflows/ci.yml" target="_blank" rel="noopener"><img src="https://github.com/EthanYap123/ai-code-snippet-hub/actions/workflows/ci.yml/badge.svg" alt="CI status" height="20">GitHub Actions ↗</a>
+    </div>
+  </header>
+
+  <a class="frame" href="https://ai-code-snippet-hub.vercel.app/" target="_blank" rel="noopener" tabindex="-1">
+    <span class="frame-bar" aria-hidden="true"><i></i><i></i><i></i><span class="frame-url">ai-code-snippet-hub.vercel.app</span></span>
+    <img src="../assets/ai-code-snippet-hub.jpg" alt="Snippet library searched for “how to connect to a database”, showing two matching snippets with match scores" width="800" height="500">
+  </a>
+
+  <div class="cs-body">
+    <nav class="toc" aria-label="On this page">
+      <span class="label">On this page</span>
+      <ol>
+        <li><a href="#problem">The problem</a></li>
+        <li><a href="#role">My role</a></li>
+        <li><a href="#stack">Stack</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#hard-part">The hard part</a></li>
+        <li><a href="#testing">What I tested</a></li>
+        <li><a href="#shipping">How it ships</a></li>
+        <li><a href="#next">What I’d do next</a></li>
+      </ol>
+    </nav>
+
+    <div class="prose">
+      <section id="problem" aria-labelledby="problem-h">
+        <h2 id="problem-h">The problem</h2>
+        <p>Useful snippets end up scattered across old projects and notes, and finding one again means remembering the exact name you gave it. I wanted a library where you search by meaning, such as “how to connect to a database”, and where every snippet comes with a short write-up of what it does.</p>
+        <p>The catch is that writing documentation and embeddings with a language model takes seconds, the model sometimes returns output that doesn’t fit, and the public version runs on a free API quota that strangers could easily use up.</p>
+      </section>
+
+      <section id="role" aria-labelledby="role-h">
+        <h2 id="role-h">My role</h2>
+        <p>A personal project, built alone: the Next.js app, the database schema, the background worker, the search ranking, the tests and both deployments.</p>
+      </section>
+
+      <section id="stack" aria-labelledby="stack-h">
+        <h2 id="stack-h">Stack</h2>
+        <dl class="stack">
+          <div><dt>App</dt><dd>Next.js 16 App Router with TypeScript; route handlers are the API</dd></div>
+          <div><dt>Database</dt><dd>PostgreSQL with pgvector (Neon in production, PGlite locally and in the browser demo)</dd></div>
+          <div><dt>Language model</dt><dd>Gemini structured output and embeddings, validated with Zod, with an offline fallback engine</dd></div>
+          <div><dt>Front end</dt><dd>React client components, SWR, CodeMirror and Shiki</dd></div>
+          <div><dt>Testing</dt><dd>Node’s test runner through <code>tsx</code>, on in-memory Postgres</dd></div>
+          <div><dt>Delivery</dt><dd>GitHub Actions, Vercel (with a daily cron), GitHub Pages</dd></div>
+        </dl>
+      </section>
+
+      <section id="architecture" aria-labelledby="architecture-h">
+        <h2 id="architecture-h">Architecture</h2>
+        <p>Saving a snippet and documenting it are two separate steps. The route handler stores the snippet and a job, answers straight away, and a worker picks the job up after the response has been sent.</p>
+        <figure class="diagram">
+          <div class="diagram-scroll" tabindex="0" role="region" aria-label="Architecture diagram, scrolls sideways on small screens">
+            <img src="../assets/diagrams/snippet.svg" alt="Architecture: the browser calls Next.js route handlers, which validate the request, save the snippet and queue a job, then respond at once. A background worker claims the job, asks Gemini or the offline engine for documentation, tags and an embedding, and saves them in Postgres with pgvector." width="1040" height="470" loading="lazy">
+          </div>
+          <figcaption>Tables: <code>snippets</code>, <code>tags</code>, <code>snippet_tags</code>, <code>documentation</code>, <code>snippet_embeddings</code> (<code>vector(768)</code> with an HNSW index), <code>jobs</code>, <code>users</code>, <code>ai_usage</code> and <code>rate_limits</code>. <a href="../assets/diagrams/snippet.svg">Open the diagram full size</a>.</figcaption>
+        </figure>
+      </section>
+
+      <section id="hard-part" aria-labelledby="hard-part-h">
+        <h2 id="hard-part-h">The hard part: never making anyone wait for the model</h2>
+        <p>A model reply takes seconds, so calling it inside the request would make saving a snippet as slow as the slowest reply. I split the work: <code>POST /api/snippets</code> validates the body with Zod, saves the snippet and a row in <code>jobs</code>, and returns <code>201</code>. Next.js <code>after()</code> then runs the worker once the response is on its way.</p>
+        <p>I didn’t want to add Redis just for a queue, so the queue is a Postgres table. The tricky part is claiming a job safely when several serverless instances run at once. <code>FOR UPDATE SKIP LOCKED</code> makes each worker skip rows another worker has locked, so two can never claim the same job, and a job whose worker died is reclaimed after two minutes.</p>
+        <p class="code-label"><code>src/lib/worker.ts</code></p>
+<pre><code>UPDATE jobs
+   SET status = 'running', locked_at = now(), attempts = attempts + 1, updated_at = now()
+ WHERE id = (
+   SELECT id FROM jobs
+    WHERE (status = 'queued' AND run_after &lt;= now())
+       OR (status = 'running' AND locked_at &lt; now() - interval '${STALE_LOCK}')   <span class="c">-- 2 minutes</span>
+    ORDER BY run_after, id
+    LIMIT 1
+    FOR UPDATE SKIP LOCKED)
+ RETURNING id::int AS id, snippet_id, attempts</code></pre>
+        <p>Model output is never trusted as-is. Even in structured-output mode, every reply is validated with Zod. Rate limits, timeouts and server errors back off and retry (5 s, then 20 s), and after three attempts the offline engine fills in, so a snippet never gets stuck.</p>
+        <h3>Protecting a free quota on a public site</h3>
+        <p>The counters live in Postgres so every instance shares them: per-visitor limits keyed by a salted IP hash (15 new snippets an hour, 5 regenerations an hour, 60 searches a minute), a daily budget of model calls for the whole site, and a circuit breaker that stops all instances calling the model after a <code>429</code>. When the budget runs out, new snippets are documented offline and search falls back to Postgres full-text search.</p>
+      </section>
+
+      <section id="testing" aria-labelledby="testing-h">
+        <h2 id="testing-h">What I tested</h2>
+        <p>73 tests in four files, with no database server or API key needed: each integration file boots its own in-memory Postgres with pgvector and the real schema.</p>
+        <ul>
+          <li><strong>Validation:</strong> defaults, language detection, size limits, rejected bodies, parameter clamping and UUID checks.</li>
+          <li><strong>Language detection</strong> for 12 languages, including regressions for SQL once read as a Dockerfile and C# LINQ once read as TSX.</li>
+          <li><strong>The offline engine:</strong> 768-dimension hashed embeddings are unit length and deterministic, and related text lands closer than unrelated text.</li>
+          <li><strong>The queue and search:</strong> <code>SKIP LOCKED</code> never double-claims, stale locks are reclaimed, backoff is respected, every snippet ends up documented, tagged and embedded, hybrid search ranks the right snippet first, and the daily budget, cooldown and rate limits work.</li>
+        </ul>
+      </section>
+
+      <section id="shipping" aria-labelledby="shipping-h">
+        <h2 id="shipping-h">How it ships</h2>
+        <ul>
+          <li><strong>CI:</strong> <a href="https://github.com/EthanYap123/ai-code-snippet-hub/actions/workflows/ci.yml">GitHub Actions</a> runs type checking, ESLint and the 73 tests on every push to <code>main</code> and every pull request.</li>
+          <li><strong>Live app:</strong> Vercel deploys <code>main</code> to the Singapore region with Neon Postgres. A daily Vercel Cron call to <code>/api/worker</code> sweeps up any job left behind.</li>
+          <li><strong>Browser demo:</strong> a Pages workflow type-checks, lints and builds a static export. There, the client’s <code>/api</code> calls go to a module that runs the same schema, worker and SQL on PGlite with pgvector in the browser, saved to IndexedDB, using the offline engine because a model key can’t be shipped in a public page.</li>
+        </ul>
+      </section>
+
+      <section id="next" aria-labelledby="next-h">
+        <h2 id="next-h">What I’d do next</h2>
+        <ul>
+          <li>Add sign-in so people can keep private collections. Snippets are currently tied to an anonymous visitor id.</li>
+          <li>Measure search quality on a fixed set of questions before changing the 80/20 mix of vector and full-text scores, instead of tuning it by eye.</li>
+          <li>Add end-to-end browser tests for the snippet page’s live status updates.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <nav class="pager" aria-label="More case studies">
+    <a href="incident.html"><span class="label">← Previous</span><strong>Incident Monitoring Dashboard</strong></a>
+    <a class="next" href="rag.html"><span class="label">Next case study →</span><strong>Academic RAG Search</strong></a>
+  </nav>
+</main>
+
+<footer>
+  <span>© 2026 Yap Kai Jun Ethan</span>
+  <div><a href="https://github.com/EthanYap123/portfolio" target="_blank" rel="noopener">Site source ↗</a><a href="#content">Back to top ↑</a></div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 470" width="1040" height="470" role="img" aria-labelledby="t d">
+<title id="t">Incident Monitoring Dashboard architecture</title>
+<desc id="d">Five Docker Compose containers. The simulator posts metric batches to the collector every two seconds. The collector, an Express and WebSocket service, runs the alert engine, stores samples, incidents, webhook deliveries and alert rules in PostgreSQL, sends incident webhooks with retries to the webhook receiver and pushes changes over /ws. nginx serves the Next.js dashboard and proxies /api and /ws to the collector, so the browser talks to one origin.</desc>
+<defs>
+<marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5c574f"/></marker>
+<marker id="tail" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5c574f"/></marker>
+</defs>
+<rect width="1040" height="470" rx="18" fill="#f5f2ec"/>
+<g><rect x="24" y="24" width="200" height="125" rx="14" fill="#ffffff" stroke="#d9d4cb" stroke-width="1.4"/>
+<text x="40" y="46" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="10.5" letter-spacing=".8" fill="#94481a">CLIENT</text>
+<text x="40" y="67" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#1c1b18">Browser</text>
+<text x="40" y="94" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Live charts and incident log</text>
+<text x="40" y="113" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">HTTP + WebSocket to :8080,</text>
+<text x="40" y="132" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">polling if the socket drops</text>
+</g>
+<g><rect x="284" y="24" width="220" height="144" rx="14" fill="#ffffff" stroke="#d9d4cb" stroke-width="1.4"/>
+<text x="300" y="46" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="10.5" letter-spacing=".8" fill="#94481a">DASHBOARD · :8080</text>
+<text x="300" y="67" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#1c1b18">nginx + Next.js</text>
+<text x="300" y="94" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Static Next.js 16 export</text>
+<text x="300" y="113" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Tailwind CSS 4</text>
+<text x="300" y="132" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="11.5" fill="#3d3a34">/api/ → collector:4000</text>
+<text x="300" y="151" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="11.5" fill="#3d3a34">/ws   → collector:4000</text>
+</g>
+<g><rect x="564" y="24" width="230" height="220" rx="14" fill="#fbefe1" stroke="#b45a1f" stroke-width="1.4"/>
+<text x="580" y="46" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="10.5" letter-spacing=".8" fill="#94481a">COLLECTOR · :4000</text>
+<text x="580" y="67" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#1c1b18">Express + ws</text>
+<text x="580" y="94" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Alert engine (packages/core)</text>
+<text x="580" y="113" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">2 bad readings open, 3 good</text>
+<text x="580" y="132" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">readings resolve an incident</text>
+<text x="580" y="151" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="11.5" fill="#3d3a34">POST /api/ingest</text>
+<text x="580" y="170" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="11.5" fill="#3d3a34">GET  /api/snapshot</text>
+<text x="580" y="189" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="11.5" fill="#3d3a34">PUT  /api/rules</text>
+<text x="580" y="208" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="11.5" fill="#3d3a34">POST /api/scenarios</text>
+<text x="580" y="227" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="11.5" fill="#3d3a34">POST /api/incidents/:id/ack…</text>
+</g>
+<g><rect x="854" y="24" width="162" height="144" rx="14" fill="#ffffff" stroke="#d9d4cb" stroke-width="1.4"/>
+<text x="870" y="46" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="10.5" letter-spacing=".8" fill="#94481a">DB</text>
+<text x="870" y="67" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#1c1b18">PostgreSQL 16</text>
+<text x="870" y="94" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">metric_samples</text>
+<text x="870" y="113" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">incidents</text>
+<text x="870" y="132" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">webhook_deliveries</text>
+<text x="870" y="151" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">alert_rules</text>
+</g>
+<g><rect x="284" y="330" width="220" height="106" rx="14" fill="#ffffff" stroke="#d9d4cb" stroke-width="1.4"/>
+<text x="300" y="352" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="10.5" letter-spacing=".8" fill="#94481a">SIMULATOR · :4001</text>
+<text x="300" y="373" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#1c1b18">Telemetry simulator</text>
+<text x="300" y="400" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">4 services, noisy metrics</text>
+<text x="300" y="419" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Spike, failure, leak, recover</text>
+</g>
+<g><rect x="854" y="330" width="162" height="106" rx="14" fill="#ffffff" stroke="#d9d4cb" stroke-width="1.4"/>
+<text x="870" y="352" font-family="'JetBrains Mono', Consolas, 'Courier New', monospace" font-size="10.5" letter-spacing=".8" fill="#94481a">WEBHOOK-RECEIVER</text>
+<text x="870" y="373" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#1c1b18">Receiver</text>
+<text x="870" y="400" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Keeps the latest 100</text>
+<text x="870" y="419" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#3d3a34">Can fail on purpose</text>
+</g>
+<path d="M224 80 L284 80" fill="none" stroke="#5c574f" stroke-width="1.6" marker-end="url(#head)"/>
+<path d="M504 80 L564 80" fill="none" stroke="#5c574f" stroke-width="1.6" marker-end="url(#head)"/>
+<rect x="512" y="48" width="44" height="24" rx="7" fill="#f5f2ec"/>
+<text x="534" y="65" text-anchor="middle" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#5c574f">proxy</text>
+<path d="M794 80 L854 80" fill="none" stroke="#5c574f" stroke-width="1.6" marker-end="url(#head)"/>
+<rect x="808" y="48" width="32" height="24" rx="7" fill="#f5f2ec"/>
+<text x="824" y="65" text-anchor="middle" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#5c574f">SQL</text>
+<path d="M504 410 L640 410 L640 244" fill="none" stroke="#5c574f" stroke-width="1.6" marker-end="url(#head)"/>
+<rect x="519" y="390" width="112" height="40" rx="7" fill="#f5f2ec"/>
+<text x="575" y="407" text-anchor="middle" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#5c574f">POST /api/ingest</text>
+<text x="575" y="423" text-anchor="middle" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#5c574f">every 2 s</text>
+<path d="M720 244 L720 380 L854 380" fill="none" stroke="#5c574f" stroke-width="1.6" marker-end="url(#head)"/>
+<rect x="728" y="360" width="118" height="40" rx="7" fill="#f5f2ec"/>
+<text x="787" y="377" text-anchor="middle" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#5c574f">webhooks, 3 tries</text>
+<text x="787" y="393" text-anchor="middle" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#5c574f">+ backoff</text>
+<path d="M600 244 L600 350 L504 350" fill="none" stroke="#5c574f" stroke-width="1.6" stroke-dasharray="5 5" marker-end="url(#head)"/>
+<rect x="521" y="338" width="63" height="24" rx="7" fill="#f5f2ec"/>
+<text x="552" y="355" text-anchor="middle" font-family="'Instrument Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#5c574f">scenario</text>
+</svg>

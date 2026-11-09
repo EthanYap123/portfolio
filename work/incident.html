@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Incident Monitoring Dashboard · Case study · Ethan Yap</title>
+<meta name="description" content="How Ethan Yap built a five-container monitoring stack with Docker Compose, Node.js, PostgreSQL and Next.js: alerting with hysteresis, webhooks with retries, and a CI job that boots the whole stack.">
+<meta name="theme-color" content="#f5f2ec">
+<link rel="canonical" href="https://ethanyap123.github.io/portfolio/work/incident.html">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://ethanyap123.github.io/portfolio/work/incident.html">
+<meta property="og:title" content="Incident Monitoring Dashboard · Case study">
+<meta property="og:description" content="How Ethan Yap built a five-container monitoring stack with Docker Compose, Node.js, PostgreSQL and Next.js: alerting with hysteresis, webhooks with retries, and a CI job that boots the whole stack.">
+<meta property="og:image" content="https://ethanyap123.github.io/portfolio/assets/incident-monitoring-dashboard.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+<link rel="stylesheet" href="../assets/case-study.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="site-header">
+  <nav aria-label="Main">
+    <a href="../" class="brand"><span class="mark" aria-hidden="true">E</span><span>Ethan Yap</span></a>
+    <div class="nav-links">
+      <a href="../#work">Work</a>
+      <a href="../#about" class="hide-sm">About</a>
+      <a href="../#contact" class="pill dark">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<main class="wrap" id="content">
+  <p class="crumbs"><a href="../#p-incident">Work</a> / Case study 02</p>
+  <header class="cs-head">
+    <span class="label">Case study · Personal project</span>
+    <h1>Incident Monitoring Dashboard</h1>
+    <p class="lede">A containerised observability stack: simulated services send telemetry, an alert engine opens and resolves incidents, and a live dashboard shows it all as it happens.</p>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>Solo: every service, the dashboard and CI</dd></div>
+      <div><dt>When</dt><dd>Built Oct 2026</dd></div>
+      <div><dt>Size</dt><dd>5 containers, 4 tables, 15 unit tests + a full-stack smoke test</dd></div>
+      <div><dt>Hosting</dt><dd>Docker Compose locally, in-browser demo on GitHub Pages</dd></div>
+    </dl>
+    <div class="actions">
+      <a class="pill dark btn" href="https://ethanyap123.github.io/incident-monitoring-dashboard/" target="_blank" rel="noopener">Live demo ↗</a>
+      <a class="pill light btn" href="https://github.com/EthanYap123/incident-monitoring-dashboard" target="_blank" rel="noopener">Source code ↗</a>
+      <a class="ci-badge" href="https://github.com/EthanYap123/incident-monitoring-dashboard/actions/workflows/ci.yml" target="_blank" rel="noopener"><img src="https://github.com/EthanYap123/incident-monitoring-dashboard/actions/workflows/ci.yml/badge.svg" alt="CI status" height="20">GitHub Actions ↗</a>
+    </div>
+  </header>
+
+  <a class="frame" href="https://ethanyap123.github.io/incident-monitoring-dashboard/" target="_blank" rel="noopener" tabindex="-1">
+    <span class="frame-bar" aria-hidden="true"><i></i><i></i><i></i><span class="frame-url">ethanyap123.github.io/incident-monitoring-dashboard</span></span>
+    <img src="../assets/incident-monitoring-dashboard.jpg" alt="Dark dashboard with four service health cards, live CPU and memory charts, chaos controls and alert thresholds" width="800" height="500">
+  </a>
+
+  <div class="cs-body">
+    <nav class="toc" aria-label="On this page">
+      <span class="label">On this page</span>
+      <ol>
+        <li><a href="#problem">The problem</a></li>
+        <li><a href="#role">My role</a></li>
+        <li><a href="#stack">Stack</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#hard-part">The hard part</a></li>
+        <li><a href="#testing">What I tested</a></li>
+        <li><a href="#shipping">How it ships</a></li>
+        <li><a href="#next">What I’d do next</a></li>
+      </ol>
+    </nav>
+
+    <div class="prose">
+      <section id="problem" aria-labelledby="problem-h">
+        <h2 id="problem-h">The problem</h2>
+        <p>I wanted to understand what happens between “a server is struggling” and “someone gets paged”. Real production traffic wasn’t available to me, so I built the whole loop myself: services that produce metrics, a collector that decides when something is wrong, a notification channel, and a dashboard an on-call engineer would watch.</p>
+        <p>The hard requirement I set was that it had to behave calmly. A monitoring tool that fires on every blip gets ignored, so incidents should open only for real problems and close only when things have actually recovered.</p>
+      </section>
+
+      <section id="role" aria-labelledby="role-h">
+        <h2 id="role-h">My role</h2>
+        <p>A personal project, built alone. I designed the Compose stack, wrote the simulator, the collector and its alert engine, the webhook receiver, the Next.js dashboard and the CI pipeline.</p>
+      </section>
+
+      <section id="stack" aria-labelledby="stack-h">
+        <h2 id="stack-h">Stack</h2>
+        <dl class="stack">
+          <div><dt>Services</dt><dd>Node.js: a telemetry simulator, an Express collector with a WebSocket server (<code>ws</code>), and a webhook receiver</dd></div>
+          <div><dt>Database</dt><dd>PostgreSQL 16</dd></div>
+          <div><dt>Dashboard</dt><dd>Next.js 16 static export with Tailwind CSS 4, served by nginx</dd></div>
+          <div><dt>Shared code</dt><dd><code>packages/core</code>: the simulator and alert engine, used by the services and the browser demo</dd></div>
+          <div><dt>Testing</dt><dd>Node’s built-in test runner, plus a smoke test against the running stack</dd></div>
+          <div><dt>Delivery</dt><dd>Docker Compose, GitHub Actions, GitHub Pages</dd></div>
+        </dl>
+      </section>
+
+      <section id="architecture" aria-labelledby="architecture-h">
+        <h2 id="architecture-h">Architecture</h2>
+        <p>Five containers start with one <code>docker compose up</code>. The browser only ever talks to nginx, which serves the dashboard and proxies <code>/api</code> and <code>/ws</code> to the collector, so there is one origin and no CORS setup.</p>
+        <figure class="diagram">
+          <div class="diagram-scroll" tabindex="0" role="region" aria-label="Architecture diagram, scrolls sideways on small screens">
+            <img src="../assets/diagrams/incident.svg" alt="Architecture: five Docker Compose containers. The simulator posts metric batches to the collector every two seconds. The collector runs the alert engine, stores data in PostgreSQL, sends incident webhooks with retries to a webhook receiver and pushes changes over a WebSocket. nginx serves the Next.js dashboard and proxies API and WebSocket traffic to the collector." width="1040" height="470" loading="lazy">
+          </div>
+          <figcaption>Tables: <code>metric_samples</code> (pruned after <code>RETENTION_MINUTES</code>), <code>incidents</code>, <code>webhook_deliveries</code> and <code>alert_rules</code>. <a href="../assets/diagrams/incident.svg">Open the diagram full size</a>.</figcaption>
+        </figure>
+      </section>
+
+      <section id="hard-part" aria-labelledby="hard-part-h">
+        <h2 id="hard-part-h">The hard part: alerting that doesn’t cry wolf</h2>
+        <p>My first alert engine opened an incident whenever a reading crossed a threshold. One noisy CPU spike meant one incident, and a metric hovering around the line opened and closed incidents every few seconds.</p>
+        <p>The fix is hysteresis: different rules for opening and closing. An incident opens after <strong>two</strong> consecutive readings over the warning threshold, escalates to critical as soon as one reading crosses the critical threshold, and resolves only after <strong>three</strong> consecutive readings back under the warning line. Only one incident per service and metric can be open at a time.</p>
+        <p class="code-label"><code>packages/core/src/alerts.js</code> (shortened)</p>
+<pre><code><span class="k">if</span> (level) {
+  t.breaches += 1;
+  t.clears = 0;
+  <span class="k">if</span> (!open &amp;&amp; t.breaches &gt;= breachSamples) {          <span class="c">// 2 bad readings</span>
+    t.incident = openIncident(sample.service, metric, level, value, now);
+    events.push({ type: 'opened', incident: { ...t.incident } });
+  } <span class="k">else if</span> (open &amp;&amp; level === 'critical' &amp;&amp; open.severity === 'warning') {
+    open.severity = 'critical';
+    events.push({ type: 'escalated', incident: { ...open } });
+  }
+} <span class="k">else if</span> (open) {
+  t.breaches = 0;
+  t.clears += 1;
+  <span class="k">if</span> (t.clears &gt;= clearSamples) {                       <span class="c">// 3 good readings</span>
+    open.status = 'resolved';
+    events.push({ type: 'resolved', incident: { ...open } });
+  }
+}</code></pre>
+        <p>Because the engine is a pure function of the readings it sees, it lives in a shared package. The collector runs it on real ingested data, and the public demo runs the very same code in the browser.</p>
+        <h3>“Running” isn’t “ready”</h3>
+        <p>The collector kept crashing on start-up because it connected before PostgreSQL could accept connections. Listing services in order doesn’t help. Every container now has a health check, and Compose starts them with <code>depends_on: condition: service_healthy</code> in order: database, webhook receiver, collector, then the simulator and dashboard. The collector also restores open incidents and saved thresholds from the database after a restart, and retries each webhook up to three times with a growing delay, logging every attempt in <code>webhook_deliveries</code>.</p>
+      </section>
+
+      <section id="testing" aria-labelledby="testing-h">
+        <h2 id="testing-h">What I tested</h2>
+        <ul>
+          <li><strong>15 unit tests</strong> for the shared core: an incident opens only after consecutive breaches, a single spike opens nothing, warnings escalate to critical, a breach during the clear window resets the countdown, and open incidents are restored after a restart. On the simulator side, normal traffic stays quiet while the failure, spike and memory-leak scenarios raise the right alerts.</li>
+          <li><strong>A full-stack smoke test</strong> (<code>scripts/smoke-test.mjs</code>) that talks to the running containers through the nginx proxy: it checks the stack is up, that the WebSocket streams live samples, that a server failure raises critical incidents, that the webhook reaches the receiver, that an incident can be acknowledged, that recovery resolves everything and that invalid thresholds are rejected.</li>
+        </ul>
+        <p>The unit tests prove the logic. The smoke test proves the containers actually talk to each other, which is where a multi-service app tends to break.</p>
+      </section>
+
+      <section id="shipping" aria-labelledby="shipping-h">
+        <h2 id="shipping-h">How it ships</h2>
+        <ul>
+          <li><strong>CI:</strong> <a href="https://github.com/EthanYap123/incident-monitoring-dashboard/actions/workflows/ci.yml">GitHub Actions</a> runs on every push to <code>main</code> and every pull request. The first job runs the core tests, installs the services and builds the dashboard. The second builds every image, starts the stack with <code>docker compose up --wait</code>, runs the smoke test, prints the container logs if anything fails and tears it all down.</li>
+          <li><strong>Demo:</strong> a Pages workflow builds the dashboard in demo mode (<code>npm run build:demo</code>) and deploys it on every push to <code>main</code>. In that build the simulator and alert engine run in the page, so anyone can trigger chaos without Docker.</li>
+          <li><strong>Hosting:</strong> five always-on containers don’t fit a free tier, so the full stack runs locally with one command and the public version is the in-browser demo.</li>
+        </ul>
+      </section>
+
+      <section id="next" aria-labelledby="next-h">
+        <h2 id="next-h">What I’d do next</h2>
+        <ul>
+          <li>Add authentication to the endpoints that change state (<code>PUT /api/rules</code>, <code>POST /api/scenarios</code>, acknowledging incidents). Today anyone who can reach the collector can change them, which is fine locally but not on a shared server.</li>
+          <li>Downsample old samples instead of only deleting them after the retention window, so the charts can show longer history.</li>
+          <li>Add tests for the collector’s Postgres store, which is currently only covered by the smoke test.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <nav class="pager" aria-label="More case studies">
+    <a href="pokemon.html"><span class="label">← Previous</span><strong>Pokémon Gym &amp; Battle System</strong></a>
+    <a class="next" href="snippet.html"><span class="label">Next case study →</span><strong>AI Code Snippet Hub</strong></a>
+  </nav>
+</main>
+
+<footer>
+  <span>© 2026 Yap Kai Jun Ethan</span>
+  <div><a href="https://github.com/EthanYap123/portfolio" target="_blank" rel="noopener">Site source ↗</a><a href="#content">Back to top ↑</a></div>
+</footer>
+</body>
+</html>
