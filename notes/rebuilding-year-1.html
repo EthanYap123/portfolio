@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rebuilding my Year 1 projects properly · Notes · Ethan Yap</title>
+<meta name="description" content="Three of my Year 1 projects passed, but weren’t ready for real people to use. What was wrong with my Pokémon API, retail dashboard and wellness site, and how I fixed them.">
+<meta name="theme-color" content="#f5f2ec">
+<link rel="canonical" href="https://ethanyap123.github.io/portfolio/notes/rebuilding-year-1.html">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://ethanyap123.github.io/portfolio/notes/rebuilding-year-1.html">
+<meta property="og:title" content="Rebuilding my Year 1 projects properly">
+<meta property="og:description" content="What was wrong with three of my Year 1 projects and how I fixed them.">
+<meta property="og:image" content="https://ethanyap123.github.io/portfolio/assets/og-preview.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+<link rel="stylesheet" href="../assets/case-study.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="site-header">
+  <nav aria-label="Main">
+    <a href="../" class="brand"><span class="mark" aria-hidden="true">E</span><span>Ethan Yap</span></a>
+    <div class="nav-links">
+      <a href="../#work">Work</a>
+      <a href="./" class="hide-sm">Notes</a>
+      <a href="../#contact" class="pill dark">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<main class="wrap" id="content">
+  <p class="crumbs"><a href="./">Notes</a> / Year 1 rebuilds</p>
+  <article>
+    <header class="cs-head">
+      <span class="label"><time datetime="2026-11-10">10 Nov 2026</time> · 3 min read</span>
+      <h1>Rebuilding my Year 1 projects properly</h1>
+      <p class="lede">Three of my Year 1 projects passed, but they weren’t ready for real people to use. Here’s what was wrong and how I fixed them.</p>
+    </header>
+
+    <div class="prose note-body">
+      <p>In October 2026 I wanted every web project on my portfolio to have a live demo. That meant going back to code I wrote a year ago and actually looking at it properly. Most of the problems weren’t complicated. They were shortcuts I took because I was the only one using the app.</p>
+
+      <h2>Pokémon battle API</h2>
+      <p>Any logged-in player could spend another player’s coins just by changing the id in the URL. The client also told the server who won a battle, so you could claim gym rewards without fighting, more than once. Buying something ran as a few separate queries, so if one failed halfway you could lose your coins and not get the Pokémon.</p>
+      <p>I added an ownership check on every player route, made the server decide who wins, and made each purchase run as one database transaction. I also moved it from MySQL to PostgreSQL, put it on Vercel with Neon, and added 20 API tests that run in CI. I wrote more about the first fix in <a href="authorisation-hole.html">another note</a>.</p>
+
+      <h2>Retail dashboard</h2>
+      <p>The front end called <code>http://localhost:8081</code>, so it only worked on my laptop. The payment methods were a hard-coded list, so the page broke if the data had one I didn’t type in. On the server, the CSV path only worked from one folder, some numbers were read as text, and if loading failed the server kept running half-broken.</p>
+      <p>Now the payment methods come from the data, all values are escaped before they go into the page, and the CSV path works from anywhere. The biggest change was removing the server completely: a build step packs all 100,000 transactions into one JSON file, and GitHub Actions builds it and deploys the dashboard to GitHub Pages.</p>
+
+      <h2>Mental Wellness Hub</h2>
+      <p>Every page had console errors because one shared script expected every page to have the same elements. The carousel had two active slides, the favicon was missing, the nav overflowed on phones, and the journal showed whatever you typed straight on the page without escaping it.</p>
+      <p>I gave each page its own script, escaped all user input, and added the accessibility features I skipped in Year 1: labels on controls, live regions, focus styles and reduced motion. Then I checked every page at phone, tablet and desktop sizes, in light and dark mode.</p>
+
+      <h2>What they had in common</h2>
+      <ul>
+        <li><strong>I trusted input I shouldn’t have.</strong> An id in the URL, a battle result from the client, text in a journal.</li>
+        <li><strong>I hard-coded things that should have been flexible,</strong> like the server address, the payment list and file paths.</li>
+        <li><strong>I never ran them anywhere except my own computer.</strong></li>
+      </ul>
+      <p>What I do now is deploy early and test it like someone else would. If I did these again, I’d also write tests from the start. For Pokémon I only added tests a week after the fixes, and they’re what stops the same bugs from coming back.</p>
+    </div>
+  </article>
+
+  <nav class="pager" aria-label="More notes">
+    <a href="authorisation-hole.html"><span class="label">← Previous note</span><strong>How I fixed the authorisation hole in my Pokémon API</strong></a>
+    <a class="next" href="./"><span class="label">Back →</span><strong>All notes</strong></a>
+  </nav>
+</main>
+
+<footer>
+  <span>© 2026 Yap Kai Jun Ethan</span>
+  <div><a href="https://github.com/EthanYap123/portfolio" target="_blank" rel="noopener">Site source ↗</a><a href="#content">Back to top ↑</a></div>
+</footer>
+</body>
+</html>
