@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rebuilding my Year 1 projects properly · Notes · Ethan Yap</title>
-<meta name="description" content="Three Year 1 projects passed their assignments but weren’t ready for real users. What was wrong with the Pokémon API, the retail dashboard and the wellness site, and how I fixed them.">
+<meta name="description" content="Three of my Year 1 projects passed, but weren’t ready for real people to use. What was wrong with my Pokémon API, retail dashboard and wellness site, and how I fixed them.">
 <meta name="theme-color" content="#f5f2ec">
 <link rel="canonical" href="https://ethanyap123.github.io/portfolio/notes/rebuilding-year-1.html">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://ethanyap123.github.io/portfolio/notes/rebuilding-year-1.html">
 <meta property="og:title" content="Rebuilding my Year 1 projects properly">
-<meta property="og:description" content="What was wrong with three Year 1 projects, how I fixed them, and the habits I kept.">
+<meta property="og:description" content="What was wrong with three of my Year 1 projects and how I fixed them.">
 <meta property="og:image" content="https://ethanyap123.github.io/portfolio/assets/og-preview.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -54,12 +54,12 @@
 
       <h2>Mental Wellness Hub</h2>
       <p>Every page had console errors because one shared script expected every page to have the same elements. The carousel had two active slides, the favicon was missing, the nav overflowed on phones, and the journal showed whatever you typed straight on the page without escaping it.</p>
-      <p>I split the script so each page has its own, escaped user input, and did the accessibility stuff I skipped in Year 1: labels on controls, live regions, focus styles and reduced motion. Then I checked every page at phone, tablet and desktop sizes, in light and dark mode.</p>
+      <p>I gave each page its own script, escaped all user input, and added the accessibility features I skipped in Year 1: labels on controls, live regions, focus styles and reduced motion. Then I checked every page at phone, tablet and desktop sizes, in light and dark mode.</p>
 
       <h2>What they had in common</h2>
       <ul>
         <li><strong>I trusted input I shouldn’t have.</strong> An id in the URL, a battle result from the client, text in a journal.</li>
-        <li><strong>I hard-coded things the data could tell me,</strong> like addresses, payment lists and file paths.</li>
+        <li><strong>I hard-coded things that should have been flexible,</strong> like the server address, the payment list and file paths.</li>
         <li><strong>I never ran them anywhere except my own computer.</strong></li>
       </ul>
       <p>What I do now is deploy early and test it like someone else would. If I did these again, I’d also write tests from the start. For Pokémon I only added tests a week after the fixes, and they’re what stops the same bugs from coming back.</p>
