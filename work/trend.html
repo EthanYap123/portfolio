@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tech Trend Sentiment Tracker · Case study · Ethan Yap</title>
+<meta name="description" content="How Ethan Yap built a Python ETL pipeline that scores tech news sentiment every six hours on GitHub Actions, keeps SQLite on a data branch and serves a Next.js dashboard from GitHub Pages.">
+<meta name="theme-color" content="#f5f2ec">
+<link rel="canonical" href="https://ethanyap123.github.io/portfolio/work/trend.html">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<script src="../assets/ci-status.js" defer></script>
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://ethanyap123.github.io/portfolio/work/trend.html">
+<meta property="og:title" content="Tech Trend Sentiment Tracker · Case study">
+<meta property="og:description" content="How Ethan Yap built a Python ETL pipeline that scores tech news sentiment every six hours on GitHub Actions, keeps SQLite on a data branch and serves a Next.js dashboard from GitHub Pages.">
+<meta property="og:image" content="https://ethanyap123.github.io/portfolio/assets/trend-sentiment-tracker.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+<link rel="stylesheet" href="../assets/case-study.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="site-header">
+  <nav aria-label="Main">
+    <a href="../" class="brand"><span class="mark" aria-hidden="true">E</span><span>Ethan Yap</span></a>
+    <div class="nav-links">
+      <a href="../#work">Work</a>
+      <a href="../#about" class="hide-sm">About</a>
+      <a href="../#contact" class="pill dark">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<main class="wrap" id="content">
+  <p class="crumbs"><a href="../#p-trend">Work</a> / Case study 05</p>
+  <header class="cs-head">
+    <span class="label">Case study · Personal project</span>
+    <h1>Tech Trend Sentiment Tracker</h1>
+    <p class="lede">An automated pipeline that collects tech and market headlines every six hours, scores their mood and charts how sectors and topics trend over time.</p>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>Solo: pipeline, API, dashboard and scheduling</dd></div>
+      <div><dt>When</dt><dd>Built Oct 2026</dd></div>
+      <div><dt>Size</dt><dd>8 sources, 11 sectors, 37 tracked terms, 26 pytest tests</dd></div>
+      <div><dt>Hosting</dt><dd>GitHub Actions cron + GitHub Pages, no server</dd></div>
+    </dl>
+    <div class="actions">
+      <a class="pill dark btn" href="https://ethanyap123.github.io/trend-sentiment-tracker/" target="_blank" rel="noopener">Live demo ↗</a>
+      <a class="pill light btn" href="https://github.com/EthanYap123/trend-sentiment-tracker" target="_blank" rel="noopener">Source code ↗</a>
+      <a class="pill light btn ci-pill" data-ci="trend-sentiment-tracker/actions/workflows/pipeline.yml" href="https://github.com/EthanYap123/trend-sentiment-tracker/actions/workflows/pipeline.yml" target="_blank" rel="noopener" title="Latest GitHub Actions run on main"><span class="ci-dot" aria-hidden="true"></span><span class="ci-text">CI</span> ↗</a>
+    </div>
+  </header>
+
+  <a class="frame" href="https://ethanyap123.github.io/trend-sentiment-tracker/" target="_blank" rel="noopener" tabindex="-1">
+    <span class="frame-bar" aria-hidden="true"><i></i><i></i><i></i><span class="frame-url">ethanyap123.github.io/trend-sentiment-tracker</span></span>
+    <img src="../assets/trend-sentiment-tracker.jpg" alt="Sentiment dashboard with KPI cards, a sentiment-over-time chart, daily volume by polarity and a list of top trending keywords" width="800" height="500">
+  </a>
+
+  <div class="cs-body">
+    <nav class="toc" aria-label="On this page">
+      <span class="label">On this page</span>
+      <ol>
+        <li><a href="#problem">The problem</a></li>
+        <li><a href="#role">My role</a></li>
+        <li><a href="#stack">Stack</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#hard-part">The hard part</a></li>
+        <li><a href="#testing">What I tested</a></li>
+        <li><a href="#shipping">How it ships</a></li>
+        <li><a href="#next">What I’d do next</a></li>
+      </ol>
+    </nav>
+
+    <div class="prose">
+      <section id="problem" aria-labelledby="problem-h">
+        <h2 id="problem-h">The problem</h2>
+        <p>I wanted to see how the mood of tech and market news shifts over weeks, by sector and by topic, rather than reading headlines one at a time. That needs data collected on a schedule, cleaned, scored and stored, and I wanted all of it to run for free with no server and no API keys.</p>
+      </section>
+
+      <section id="role" aria-labelledby="role-h">
+        <h2 id="role-h">My role</h2>
+        <p>A personal project, built alone: the extract, transform and load pipeline, the sentiment rules, the FastAPI backend, the Next.js dashboard and the scheduled workflow.</p>
+      </section>
+
+      <section id="stack" aria-labelledby="stack-h">
+        <h2 id="stack-h">Stack</h2>
+        <dl class="stack">
+          <div><dt>Pipeline</dt><dd>Python, pandas, requests and feedparser</dd></div>
+          <div><dt>Storage</dt><dd>SQLite with upserts and 90-day retention</dd></div>
+          <div><dt>Scoring</dt><dd>The VADER word list plus my own tech and markets dictionary, negation and intensifier rules</dd></div>
+          <div><dt>API</dt><dd>FastAPI with APScheduler (local and self-hosted mode)</dd></div>
+          <div><dt>Dashboard</dt><dd>Next.js, Recharts, Tailwind CSS</dd></div>
+          <div><dt>Delivery</dt><dd>GitHub Actions cron, an orphan <code>data</code> branch, GitHub Pages</dd></div>
+        </dl>
+      </section>
+
+      <section id="architecture" aria-labelledby="architecture-h">
+        <h2 id="architecture-h">Architecture</h2>
+        <p>The dashboard reads from one data interface with two backends: FastAPI running SQL against SQLite, or, on GitHub Pages, a snapshot of every stored article that it queries in the browser.</p>
+        <figure class="diagram">
+          <div class="diagram-scroll" tabindex="0" role="region" aria-label="Architecture diagram, scrolls sideways on small screens">
+            <img src="../assets/diagrams/trend.svg" alt="Architecture: every six hours a GitHub Actions cron restores SQLite from the data branch, runs the Python pipeline over Hacker News, DEV.to and six RSS feeds, saves the database back, exports a snapshot and deploys the static Next.js dashboard to GitHub Pages. Locally, FastAPI with APScheduler serves the same queries." width="1040" height="470" loading="lazy">
+          </div>
+          <figcaption>Tables: <code>articles</code>, <code>article_keywords</code> and <code>pipeline_runs</code>. API routes include <code>/api/summary</code>, <code>/api/sentiment/timeseries</code>, <code>/api/sectors</code>, <code>/api/keywords</code> and <code>/api/articles</code>. <a href="../assets/diagrams/trend.svg">Open the diagram full size</a>.</figcaption>
+        </figure>
+      </section>
+
+      <section id="hard-part" aria-labelledby="hard-part-h">
+        <h2 id="hard-part-h">The hard part: a stateful pipeline on stateless, free infrastructure</h2>
+        <p>A scheduled pipeline needs somewhere to keep its database between runs, but a GitHub Actions runner starts empty every time and I didn’t want a paid database. The workflow restores <code>tracker.db</code> from an orphan <code>data</code> branch, runs the pipeline, then saves the database back as a single force-pushed commit, so binary history never piles up.</p>
+        <p class="code-label"><code>.github/workflows/pipeline.yml</code> (shortened)</p>
+<pre><code><span class="k">- name:</span> Restore database from the data branch
+  run: |
+    if git fetch --depth=1 origin data; then
+      git show origin/data:tracker.db &gt; data/tracker.db
+    fi
+<span class="k">- name:</span> Extract, transform, load
+  run: python -m pipeline.run --trigger ci
+<span class="k">- name:</span> Save database to the data branch
+  run: |                <span class="c"># one orphan commit, force-pushed</span>
+    git init -q -b data &amp;&amp; git add tracker.db &amp;&amp; git commit -q -m "Pipeline data"
+    git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" data</code></pre>
+        <p>The workflow uses <code>concurrency</code> so two runs never write at once, and each source fails on its own: one dead RSS feed marks the run <code>partial</code> in <code>pipeline_runs</code> instead of losing the whole run.</p>
+        <h3>Sentiment tools don’t speak tech</h3>
+        <p>Off-the-shelf VADER scores “kill”, “hack” and “panic” as negative, but in tech news they’re usually neutral: “kill switch”, “Show HN: a weekend hack”, “kernel panic”. I neutralised that jargon, added a tech and markets dictionary (“plunges”, “outage”, “fined”), and kept negation and intensifier rules.</p>
+        <h3>Two implementations, one answer</h3>
+        <p>The Pages dashboard answers queries in JavaScript while the API uses Python, which is two chances to drift. <code>tests/test_parity.py</code> runs both on the same data across date ranges, sectors, polarity, source and search filters, and fails if any number differs.</p>
+      </section>
+
+      <section id="testing" aria-labelledby="testing-h">
+        <h2 id="testing-h">What I tested</h2>
+        <p>26 pytest tests cover sentiment rules (negation, intensifiers, phrases, tech jargon), cleaning and de-duplication, URL canonicalisation, sector and keyword tagging, idempotent upserts, re-scoring, partial-failure logging, the run lock, every API endpoint and its validation, and the Python and JavaScript parity check.</p>
+        <div class="callout">
+          <span class="label">A clock bug the schedule exposed</span>
+          <p>On 8 Nov the scheduled runs started failing. One test built articles dated from a fixed day, but the pipeline prunes anything older than 90 days by the real clock, so after two weeks one test article aged out. Because tests gate the pipeline, the dashboard stopped refreshing until the test was changed to date its rows from today (<a href="https://github.com/EthanYap123/trend-sentiment-tracker/pull/3">pull request #3</a>).</p>
+        </div>
+      </section>
+
+      <section id="shipping" aria-labelledby="shipping-h">
+        <h2 id="shipping-h">How it ships</h2>
+        <ul>
+          <li><strong>One workflow, three jobs:</strong> <a href="https://github.com/EthanYap123/trend-sentiment-tracker/actions/workflows/pipeline.yml">the pipeline workflow</a> runs every six hours, on every push to <code>main</code> and on demand (with an optional backfill). It runs the tests first, then the pipeline, then deploys. A failing test stops the run before any data or deploy changes.</li>
+          <li><strong>Deploy:</strong> the pipeline job exports <code>snapshot.json</code>, builds the static dashboard and uploads it, and the last job publishes it to GitHub Pages.</li>
+          <li><strong>Hosting:</strong> no server at all. The data lives on a branch, the compute is GitHub Actions and the site is GitHub Pages.</li>
+        </ul>
+      </section>
+
+      <section id="next" aria-labelledby="next-h">
+        <h2 id="next-h">What I’d do next</h2>
+        <ul>
+          <li>Run the tests on pull requests too, so a change is checked before it reaches <code>main</code> rather than on the next scheduled run.</li>
+          <li>Improve tagging. Sectors come from keyword dictionaries, so about half of Hacker News’s long tail lands in “General Tech”.</li>
+          <li>Add a keep-alive. GitHub pauses scheduled workflows in repositories with no activity for 60 days.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <nav class="pager" aria-label="More case studies">
+    <a href="rag.html"><span class="label">← Previous</span><strong>Academic RAG Search</strong></a>
+    <a class="next" href="../#work"><span class="label">Back →</span><strong>All projects</strong></a>
+  </nav>
+</main>
+
+<footer>
+  <span>© 2026 Yap Kai Jun Ethan</span>
+  <div><a href="https://github.com/EthanYap123/portfolio" target="_blank" rel="noopener">Site source ↗</a><a href="#content">Back to top ↑</a></div>
+</footer>
+</body>
+</html>

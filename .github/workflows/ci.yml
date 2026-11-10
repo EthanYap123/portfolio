@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Validate pages and links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # A static site with no build step: check every page is valid HTML
+      # and that every local link, image and stylesheet exists.
+      - name: Validate HTML
+        run: npx --yes html-validate@9.7.1 --preset standard $(git ls-files '*.html')
+
+      - name: Check local links and assets
+        run: node .github/scripts/check-local-refs.mjs $(git ls-files '*.html')

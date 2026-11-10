@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Academic Resource RAG Search Engine · Case study · Ethan Yap</title>
+<meta name="description" content="How Ethan Yap built a FastAPI and ChromaDB search engine that answers questions from policy handbooks with every claim cited to its page and section, with 26 pytest tests gating the deploy.">
+<meta name="theme-color" content="#f5f2ec">
+<link rel="canonical" href="https://ethanyap123.github.io/portfolio/work/rag.html">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<script src="../assets/ci-status.js" defer></script>
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://ethanyap123.github.io/portfolio/work/rag.html">
+<meta property="og:title" content="Academic Resource RAG Search Engine · Case study">
+<meta property="og:description" content="How Ethan Yap built a FastAPI and ChromaDB search engine that answers questions from policy handbooks with every claim cited to its page and section, with 26 pytest tests gating the deploy.">
+<meta property="og:image" content="https://ethanyap123.github.io/portfolio/assets/academic-rag-search.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+<link rel="stylesheet" href="../assets/case-study.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="site-header">
+  <nav aria-label="Main">
+    <a href="../" class="brand"><span class="mark" aria-hidden="true">E</span><span>Ethan Yap</span></a>
+    <div class="nav-links">
+      <a href="../#work">Work</a>
+      <a href="../#about" class="hide-sm">About</a>
+      <a href="../#contact" class="pill dark">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<main class="wrap" id="content">
+  <p class="crumbs"><a href="../#p-rag">Work</a> / Case study 04</p>
+  <header class="cs-head">
+    <span class="label">Case study · Personal project</span>
+    <h1>Academic Resource RAG Search Engine</h1>
+    <p class="lede">Ask a question about a policy handbook and get an answer built only from the documents, with every claim cited to the page and section it came from.</p>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>Solo: ingestion, retrieval, API, UI and demo</dd></div>
+      <div><dt>When</dt><dd>Built Oct 2026</dd></div>
+      <div><dt>Size</dt><dd>7 API routes, 26 pytest tests</dd></div>
+      <div><dt>Hosting</dt><dd>In-browser demo on GitHub Pages; full server runs locally or in Docker</dd></div>
+    </dl>
+    <div class="actions">
+      <a class="pill dark btn" href="https://ethanyap123.github.io/academic-rag-search/" target="_blank" rel="noopener">Live demo ↗</a>
+      <a class="pill light btn" href="https://github.com/EthanYap123/academic-rag-search" target="_blank" rel="noopener">Source code ↗</a>
+      <a class="pill light btn ci-pill" data-ci="academic-rag-search/actions/workflows/ci.yml" href="https://github.com/EthanYap123/academic-rag-search/actions/workflows/ci.yml" target="_blank" rel="noopener" title="Latest GitHub Actions run on main"><span class="ci-dot" aria-hidden="true"></span><span class="ci-text">CI</span> ↗</a>
+    </div>
+  </header>
+
+  <a class="frame" href="https://ethanyap123.github.io/academic-rag-search/" target="_blank" rel="noopener" tabindex="-1">
+    <span class="frame-bar" aria-hidden="true"><i></i><i></i><i></i><span class="frame-url">ethanyap123.github.io/academic-rag-search</span></span>
+    <img src="../assets/academic-rag-search.jpg" alt="Answer to “What happens if I miss an exam because I was sick?” with numbered citations beside highlighted source passages" width="800" height="500">
+  </a>
+
+  <div class="cs-body">
+    <nav class="toc" aria-label="On this page">
+      <span class="label">On this page</span>
+      <ol>
+        <li><a href="#problem">The problem</a></li>
+        <li><a href="#role">My role</a></li>
+        <li><a href="#stack">Stack</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#hard-part">The hard part</a></li>
+        <li><a href="#testing">What I tested</a></li>
+        <li><a href="#shipping">How it ships</a></li>
+        <li><a href="#next">What I’d do next</a></li>
+      </ol>
+    </nav>
+
+    <div class="prose">
+      <section id="problem" aria-labelledby="problem-h">
+        <h2 id="problem-h">The problem</h2>
+        <p>School handbooks answer questions like “what happens if I miss an exam because I was sick?”, but the answer is buried in a long PDF. A general chatbot will happily answer anyway, and it can be confidently wrong. I wanted answers that come only from the documents, point to the exact page and section, and admit when the documents don’t say.</p>
+      </section>
+
+      <section id="role" aria-labelledby="role-h">
+        <h2 id="role-h">My role</h2>
+        <p>A personal project, built alone: the PDF ingestion, chunking, retrieval and answering in Python, the FastAPI server, the chat interface, the tests and the in-browser demo.</p>
+      </section>
+
+      <section id="stack" aria-labelledby="stack-h">
+        <h2 id="stack-h">Stack</h2>
+        <dl class="stack">
+          <div><dt>API</dt><dd>Python, FastAPI</dd></div>
+          <div><dt>Retrieval</dt><dd>ChromaDB (persistent, cosine space) with all-MiniLM-L6-v2 embeddings run locally through ONNX</dd></div>
+          <div><dt>Parsing</dt><dd>pypdf, page by page</dd></div>
+          <div><dt>Answers</dt><dd>Gemini when a key is set, otherwise an extractive answerer that quotes sentences</dd></div>
+          <div><dt>Demo</dt><dd>transformers.js and pdf.js run the same pipeline in the browser</dd></div>
+          <div><dt>Testing</dt><dd>pytest, GitHub Actions</dd></div>
+        </dl>
+      </section>
+
+      <section id="architecture" aria-labelledby="architecture-h">
+        <h2 id="architecture-h">Architecture</h2>
+        <p>Uploads go through ingestion and land in ChromaDB with their title, page and section. Questions go through retrieval and then one of two answerers.</p>
+        <figure class="diagram">
+          <div class="diagram-scroll" tabindex="0" role="region" aria-label="Architecture diagram, scrolls sideways on small screens">
+            <img src="../assets/diagrams/rag.svg" alt="Architecture: a chat UI calls a FastAPI API. Ingestion reads PDFs page by page, strips headers and builds sentence-aligned chunks that are embedded locally and stored in ChromaDB. Answering retrieves the top 15 chunks, drops weak matches, keeps 5, then Gemini answers with citations or an extractive answerer quotes the best sentences." width="1040" height="430" loading="lazy">
+          </div>
+          <figcaption>Routes: <code>/api/ask</code>, <code>/api/search</code>, <code>/api/documents</code> (list, upload, delete, open the file) and <code>/api/health</code>. <a href="../assets/diagrams/rag.svg">Open the diagram full size</a>.</figcaption>
+        </figure>
+      </section>
+
+      <section id="hard-part" aria-labelledby="hard-part-h">
+        <h2 id="hard-part-h">The hard part: answers you can check</h2>
+        <h3>1. Chunks that never cross a page</h3>
+        <p>My first attempt split each PDF every N characters. Chunks cut sentences in half, mixed two sections together and could only be cited as “pages 2–3”. Now the ingester reads one page at a time, detects headings such as <code>3.1 Late Submission</code>, and packs whole sentences into chunks of about 900 characters with about 160 characters of overlap. A chunk never spans two pages or two sections, so its citation is exact.</p>
+        <p>PDFs are also full of noise. Lines that repeat on most pages are running headers or footers, so they’re dropped before chunking:</p>
+        <p class="code-label"><code>app/ingest.py</code></p>
+<pre><code><span class="k">def</span> _running_lines(pages):
+    <span class="c">&quot;&quot;&quot;Lines repeated on most pages (running headers/footers) are noise.&quot;&quot;&quot;</span>
+    <span class="k">if</span> len(pages) &lt; 2:
+        <span class="k">return</span> set()
+    counts = Counter(line <span class="k">for</span> lines <span class="k">in</span> pages <span class="k">for</span> line <span class="k">in</span> {l.strip() <span class="k">for</span> l <span class="k">in</span> lines <span class="k">if</span> l.strip()})
+    needed = len(pages) <span class="k">if</span> len(pages) &lt; 5 <span class="k">else</span> len(pages) * 0.6
+    <span class="k">return</span> {line <span class="k">for</span> line, n <span class="k">in</span> counts.items() <span class="k">if</span> n &gt;= needed <span class="k">and not</span> is_heading(line)}</code></pre>
+        <h3>2. Saying “I don’t know”</h3>
+        <p>Without a cut-off the app answered off-topic questions with whatever was least far away. Retrieval now takes the 15 nearest chunks, drops any below 0.30 cosine similarity, adds a small keyword-overlap bonus and keeps the top 5. If nothing is left, the app says the documents don’t cover it.</p>
+        <h3>3. Every claim must cite a source</h3>
+        <p>With a model key, Gemini gets numbered sources and must cite <code>[n]</code> for every claim or reply <code>NOT_FOUND</code>. Citations are checked against the source list, numbers that don’t exist are removed, and an answer with no valid citation is thrown away and replaced by quoted passages. If the model call fails for any reason, the app falls back to quoting instead of failing.</p>
+        <p class="code-label"><code>app/rag.py</code> (shortened)</p>
+<pre><code>text = gemini_answer(question, sources)
+<span class="k">if</span> text.strip() == NOT_FOUND:
+    <span class="k">return</span> Answer(question, NOT_FOUND_MESSAGE, ...)
+text, used = clean_citations(text, len(sources))   <span class="c"># drop [n] that don't match a source</span>
+<span class="k">if</span> used:
+    <span class="k">return</span> Answer(question, text, True, "gemini", sources)
+note = "The model's answer had no valid citations, so it was replaced with quoted passages."</code></pre>
+      </section>
+
+      <section id="testing" aria-labelledby="testing-h">
+        <h2 id="testing-h">What I tested</h2>
+        <p>26 pytest tests:</p>
+        <ul>
+          <li><strong>Parsing:</strong> titles, pages, sections, header stripping, bullets and overlap.</li>
+          <li><strong>Retrieval and citations:</strong> the right page and section are cited, and extractive answers are verbatim quotes.</li>
+          <li><strong>Refusals:</strong> off-topic questions get “not in the documents”.</li>
+          <li><strong>The Gemini path</strong> with the network call mocked: valid citations, uncited answers rejected, <code>NOT_FOUND</code>, and falling back when the API fails.</li>
+          <li><strong>The full API:</strong> upload, ask, open and delete, rejected uploads and protected sample documents, plus the static demo build.</li>
+        </ul>
+      </section>
+
+      <section id="shipping" aria-labelledby="shipping-h">
+        <h2 id="shipping-h">How it ships</h2>
+        <ul>
+          <li><strong>CI and deploy in one workflow:</strong> <a href="https://github.com/EthanYap123/academic-rag-search/actions/workflows/ci.yml">GitHub Actions</a> installs the dependencies, caches the embedding model and runs pytest on every push and pull request. Only if the tests pass on <code>main</code> does it build the demo and deploy it to GitHub Pages, so a failing test blocks the release.</li>
+          <li><strong>Demo:</strong> <code>scripts/build_demo.py</code> pre-chunks and embeds the sample documents. In the page, <code>demo-api.js</code> replaces the API with a port of the Python chunking, retrieval and extractive answering, using transformers.js for embeddings and pdf.js for uploads.</li>
+          <li><strong>Full server:</strong> runs locally with FastAPI and ChromaDB, and the repo includes a Dockerfile for it.</li>
+        </ul>
+      </section>
+
+      <section id="next" aria-labelledby="next-h">
+        <h2 id="next-h">What I’d do next</h2>
+        <ul>
+          <li>Try a larger embedding model. The small one misses some synonyms: a question about “ChatGPT” doesn’t match a section about “generative AI tools”, so the app refuses rather than guessing.</li>
+          <li>Run the Gemini mode against the sample handbooks with a real key. So far that path is covered by tests with the network call mocked.</li>
+          <li>Add OCR for scanned PDFs, which have no text layer today.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <nav class="pager" aria-label="More case studies">
+    <a href="snippet.html"><span class="label">← Previous</span><strong>AI Code Snippet Hub</strong></a>
+    <a class="next" href="trend.html"><span class="label">Next case study →</span><strong>Tech Trend Sentiment Tracker</strong></a>
+  </nav>
+</main>
+
+<footer>
+  <span>© 2026 Yap Kai Jun Ethan</span>
+  <div><a href="https://github.com/EthanYap123/portfolio" target="_blank" rel="noopener">Site source ↗</a><a href="#content">Back to top ↑</a></div>
+</footer>
+</body>
+</html>

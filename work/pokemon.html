@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pokémon Gym &amp; Battle System · Case study · Ethan Yap</title>
+<meta name="description" content="How Ethan Yap rebuilt a Year 1 Pokémon battle API in Node.js, Express and PostgreSQL: ownership checks on every player route, purchases as one database transaction, 20 API tests in CI, live on Vercel and Neon.">
+<meta name="theme-color" content="#f5f2ec">
+<link rel="canonical" href="https://ethanyap123.github.io/portfolio/work/pokemon.html">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<script src="../assets/ci-status.js" defer></script>
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://ethanyap123.github.io/portfolio/work/pokemon.html">
+<meta property="og:title" content="Pokémon Gym &amp; Battle System · Case study">
+<meta property="og:description" content="Closing an authorisation hole and making purchases atomic in a Node.js, Express and PostgreSQL game API.">
+<meta property="og:image" content="https://ethanyap123.github.io/portfolio/assets/pokemon-battle-system.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+<link rel="stylesheet" href="../assets/case-study.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="site-header">
+  <nav aria-label="Main">
+    <a href="../" class="brand"><span class="mark" aria-hidden="true">E</span><span>Ethan Yap</span></a>
+    <div class="nav-links">
+      <a href="../#work">Work</a>
+      <a href="../#about" class="hide-sm">About</a>
+      <a href="../#contact" class="pill dark">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<main class="wrap" id="content">
+  <p class="crumbs"><a href="../#p-pokemon">Work</a> / Case study 01</p>
+  <header class="cs-head">
+    <span class="label">Case study · Year 1 school project, rebuilt</span>
+    <h1>Pokémon Gym &amp; Battle System</h1>
+    <p class="lede">A full-stack Pokémon game on a Node.js and Express REST API over PostgreSQL. I first built it for a Year 1 module, then rebuilt it in Year 2 so it was safe to put on the public internet.</p>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>Solo: API, database, front end and deployment</dd></div>
+      <div><dt>When</dt><dd>Year 1 version Jul 2026, rebuilt 22–29 Oct 2026</dd></div>
+      <div><dt>Size</dt><dd>49 API routes, 13 tables, 20 API tests</dd></div>
+      <div><dt>Hosting</dt><dd>Vercel + Neon, browser demo on GitHub Pages</dd></div>
+    </dl>
+    <div class="actions">
+      <a class="pill dark btn" href="https://pokemon-gamified-battle-system-eta.vercel.app/" target="_blank" rel="noopener">Live app ↗</a>
+      <a class="pill light btn" href="https://ethanyap123.github.io/pokemon-gamified-battle-system/" target="_blank" rel="noopener">Browser demo ↗</a>
+      <a class="pill light btn" href="https://github.com/EthanYap123/pokemon-gamified-battle-system" target="_blank" rel="noopener">Source code ↗</a>
+      <a class="pill light btn ci-pill" data-ci="pokemon-gamified-battle-system/actions/workflows/ci.yml" href="https://github.com/EthanYap123/pokemon-gamified-battle-system/actions/workflows/ci.yml" target="_blank" rel="noopener" title="Latest GitHub Actions run on main"><span class="ci-dot" aria-hidden="true"></span><span class="ci-text">CI</span> ↗</a>
+    </div>
+  </header>
+
+  <a class="frame" href="https://pokemon-gamified-battle-system-eta.vercel.app/" target="_blank" rel="noopener" tabindex="-1">
+    <span class="frame-bar" aria-hidden="true"><i></i><i></i><i></i><span class="frame-url">pokemon-gamified-battle-system-eta.vercel.app</span></span>
+    <img src="../assets/pokemon-battle-system.jpg" alt="Battle screen with Charmander facing Brock’s Geodude, HP bars, a battle log and the move menu" width="800" height="500">
+  </a>
+
+  <div class="cs-body">
+    <nav class="toc" aria-label="On this page">
+      <span class="label">On this page</span>
+      <ol>
+        <li><a href="#problem">The problem</a></li>
+        <li><a href="#role">My role</a></li>
+        <li><a href="#stack">Stack</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#hard-part">The hard part</a></li>
+        <li><a href="#testing">What I tested</a></li>
+        <li><a href="#shipping">How it ships</a></li>
+        <li><a href="#next">What I’d do next</a></li>
+      </ol>
+    </nav>
+
+    <div class="prose">
+      <section id="problem" aria-labelledby="problem-h">
+        <h2 id="problem-h">The problem</h2>
+        <p>The Back-End Development module asked for a REST API behind a gamified system. I built a Pokémon game: players catch Pokémon from a shop, build a team and battle their way through eight gyms. My Year 1 version worked in a demo, but it was never meant to face real users.</p>
+        <p>When I came back to it in Year 2 I wanted it live, on free hosting, where strangers could sign up and play. That raised the bar. A shared server needs every player’s data protected from every other player, coins that can’t be spent twice, and rewards that can’t be farmed. The Year 1 code failed all three.</p>
+      </section>
+
+      <section id="role" aria-labelledby="role-h">
+        <h2 id="role-h">My role</h2>
+        <p>This was an individual project. I wrote the API, the database schema, the battle engine and the front end, and I did the Year 2 rebuild: the security fixes, the port from MySQL to PostgreSQL, the tests, CI and both deployments.</p>
+      </section>
+
+      <section id="stack" aria-labelledby="stack-h">
+        <h2 id="stack-h">Stack</h2>
+        <dl class="stack">
+          <div><dt>Back end</dt><dd>Node.js, Express 5, node-postgres (<code>pg</code>)</dd></div>
+          <div><dt>Database</dt><dd>PostgreSQL on Neon (MySQL in the Year 1 version)</dd></div>
+          <div><dt>Auth</dt><dd>JSON Web Tokens, bcrypt password hashing, rate limits stored in Postgres</dd></div>
+          <div><dt>Front end</dt><dd>HTML, CSS and vanilla JavaScript</dd></div>
+          <div><dt>Testing</dt><dd>Node’s built-in test runner and <code>fetch</code>, against a real Postgres</dd></div>
+          <div><dt>Delivery</dt><dd>GitHub Actions, Vercel (serverless, Singapore region), GitHub Pages</dd></div>
+        </dl>
+      </section>
+
+      <section id="architecture" aria-labelledby="architecture-h">
+        <h2 id="architecture-h">Architecture</h2>
+        <p>The browser talks to one Express app. Locally it runs as a normal server. On Vercel the same app is wrapped as a single serverless function (<code>api/index.js</code>), and the static front end is served from Vercel’s CDN. Every request passes through the same middleware chain before it reaches a controller: verify the token, then check ownership or admin rights, then rate limits.</p>
+        <figure class="diagram">
+          <div class="diagram-scroll" tabindex="0" role="region" aria-label="Architecture diagram, scrolls sideways on small screens">
+            <img src="../assets/diagrams/pokemon.svg" alt="Architecture: the browser sends JSON with a JWT to an Express 5 REST API running as a Vercel function. The API checks the token, ownership or admin rights and rate limits, runs the battle engine, and reads and writes 13 PostgreSQL tables on Neon. A separate browser demo on GitHub Pages answers the same routes in the page." width="1040" height="390" loading="lazy">
+          </div>
+          <figcaption>Key tables: <code>Users</code>, <code>Battles</code>, <code>UserPokemon</code>, <code>Team</code>, <code>PullHistory</code> and <code>RateLimit</code>. <a href="../assets/diagrams/pokemon.svg">Open the diagram full size</a>.</figcaption>
+        </figure>
+      </section>
+
+      <section id="hard-part" aria-labelledby="hard-h">
+        <h2 id="hard-h">The hard part: who is allowed to do what</h2>
+        <h3>1. Logging in isn’t the same as being allowed</h3>
+        <p>In Year 1 every player route took the player’s id from the URL and only checked that the request carried a valid token. It never checked whose token it was. Any logged-in player could spend another player’s coins or rearrange their team just by changing the number in the URL.</p>
+        <p class="code-label">Year 1: <code>src/routes/shopRoutes.js</code></p>
+<pre><code>router.post('/:user_id/purchase', jwtMiddleware.verifyToken, shopController.purchaseItem);
+<span class="c">// a valid token for user 2 could buy on behalf of user 7</span></code></pre>
+        <p>The fix was a small middleware that runs after <code>verifyToken</code>. It compares the account in the request with the account in the token and answers <code>403</code> if they differ. It now guards the shop, team, Pokédex and owned-Pokémon routes. Battles go one step further and load the battle by both its id and the caller’s id, so you can’t play someone else’s turn. Routes that change shared game data (gyms, badges, Pokémon) need an admin id from <code>ADMIN_USER_IDS</code>, and nobody is an admin by default.</p>
+        <p class="code-label">Now: <code>src/middleware/jwtMiddleware.js</code></p>
+<pre><code>module.exports.verifyOwner = (req, res, next) =&gt; {
+  const requestedId = req.params.user_id ?? req.body.user_id;
+  if (parseInt(requestedId) !== res.locals.userId) {
+    return res.status(403).json({ message: "Forbidden: Not your account" });
+  }
+  next();
+};
+
+router.post('/:user_id/purchase',
+  jwtMiddleware.verifyToken, jwtMiddleware.verifyOwner, shopController.purchaseItem);</code></pre>
+
+        <h3>2. A purchase is all or nothing</h3>
+        <p>A purchase takes coins, rolls a Pokémon, adds it to the player’s collection, records the pull and sometimes refunds a duplicate. In Year 1 these were separate queries in nested callbacks: read the balance, check it, deduct the coins, then add the Pokémon. If a later step failed, the coins were already gone. Two requests sent at the same moment could also both pass the balance check before either one deducted anything.</p>
+        <p>Now each purchase runs inside one transaction on one connection. The first query locks the player’s row with <code>SELECT … FOR UPDATE</code>, so a second purchase for the same player waits until the first one commits. Any error, including “not enough coins”, rolls the whole thing back.</p>
+        <p class="code-label"><code>src/controllers/shopController.js</code> (shortened)</p>
+<pre><code><span class="k">async function</span> withTransaction(fn) {
+  const conn = await pool.promise().getConnection();
+  try {
+    await conn.beginTransaction();
+    const result = await fn(conn);
+    await conn.commit();
+    return result;
+  } catch (err) {
+    await conn.rollback();
+    throw err;
+  } finally {
+    conn.release();
+  }
+}
+
+const gachaPool = await getGachaPool();   <span class="c">// read before the transaction starts</span>
+const payload = await withTransaction(async (conn) =&gt; {
+  const user = await shopModel.getUserForUpdate(conn, user_id);   <span class="c">// FOR UPDATE</span>
+  if (user.coins &lt; cost) throw new ShopError(403, "Not enough coins.");
+  const { pulls, refund } = await catchPulls(conn, gachaPool, user_id, rarities, item.price);
+  await shopModel.addPullHistory(conn, user_id, item.item_name, pulls);
+  await shopModel.updateUserAfterPurchase(conn, { user_id, coinChange: refund - cost, pity_count: pity });
+  ...
+});</code></pre>
+        <div class="callout">
+          <span class="label">A bug the port exposed</span>
+          <p>Moving to Postgres showed that the shop read its list of catchable Pokémon on a second pool connection while the transaction was still holding the first. On a small serverless pool that can stall. Reading the list before the transaction starts fixed it.</p>
+        </div>
+
+        <h3>3. Rewards only for a real win</h3>
+        <p>The Year 1 end-battle endpoint read the result from the request body, so a player could send <code>"result": "win"</code> and collect gym coins without fighting, as often as they liked. Any logged-in player could also create or delete gyms. Now the server decides the result. A reward needs a won battle that belongs to the caller and hasn’t been claimed yet, gyms have to be beaten in order, and only admins can change gyms.</p>
+      </section>
+
+      <section id="testing" aria-labelledby="testing-h">
+        <h2 id="testing-h">What I tested</h2>
+        <p><code>tests/api.test.js</code> starts the real Express app and calls it over HTTP against a real PostgreSQL database. It uses Node’s built-in test runner and <code>fetch</code>, so it adds no packages. The 20 tests cover the rules that matter most:</p>
+        <ul>
+          <li><strong>Auth:</strong> sign-up, duplicate names ignoring case, passwords never stored in plain text, wrong passwords and forged tokens rejected.</li>
+          <li><strong>Ownership:</strong> one trainer can’t buy, pick a starter or read a profile on another trainer’s account, and only admins can change gyms.</li>
+          <li><strong>Shop transactions:</strong> an unaffordable purchase changes nothing, a purchase charges, records and catches together, 10-pulls get the discount and the uncommon guarantee, and the free ball works once a day.</li>
+          <li><strong>Gym rewards:</strong> nothing without a won battle, never twice for one win, never for another trainer’s win, and gyms in order.</li>
+          <li><strong>Demo trainers:</strong> each visitor gets a separate account, and the endpoint is rate-limited.</li>
+        </ul>
+      </section>
+
+      <section id="shipping" aria-labelledby="shipping-h">
+        <h2 id="shipping-h">How it ships</h2>
+        <ul>
+          <li><strong>CI:</strong> <a href="https://github.com/EthanYap123/pokemon-gamified-battle-system/actions/workflows/ci.yml">GitHub Actions</a> runs on every push to <code>main</code> and every pull request. It starts a Postgres 16 service container, creates and seeds a fresh database with <code>npm run init_tables -- --reset</code>, then runs the 20 API tests.</li>
+          <li><strong>Live app:</strong> Vercel deploys <code>main</code>. Its build step is <code>npm run init_tables</code>, which only creates missing tables and only seeds an empty database, so a deploy never wipes player progress. The Express app runs as one serverless function in Singapore, with Neon Postgres connected through <code>DATABASE_URL</code>.</li>
+          <li><strong>Browser demo:</strong> a second workflow builds <code>npm run build:demo</code> and publishes it to GitHub Pages. <code>demo/mock-api.js</code> answers the same <code>/api</code> routes in the browser with the real battle engine, so anyone can play without an account.</li>
+          <li><strong>Guards for a public server:</strong> 5 sign-ups per visitor an hour and 300 a day in total, 20 login attempts per 15 minutes, 120 game actions a minute, and random passwords for the seed trainers.</li>
+        </ul>
+      </section>
+
+      <section id="next" aria-labelledby="next-h">
+        <h2 id="next-h">What I’d do next</h2>
+        <ul>
+          <li>Move the last ownership checks (profile update and delete, which still check inside <code>userController</code>) onto the same <code>verifyOwner</code> middleware, so every rule lives in one place.</li>
+          <li>Keep the login token in an <code>httpOnly</code> cookie instead of <code>localStorage</code>, so a script injected into the page couldn’t read it.</li>
+          <li>Add unit tests for <code>battleEngine.js</code>. Today it’s only covered through the API tests and the browser demo.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <nav class="pager" aria-label="More case studies">
+    <a href="../#work"><span class="label">← Back</span><strong>All projects</strong></a>
+    <a class="next" href="incident.html"><span class="label">Next case study →</span><strong>Incident Monitoring Dashboard</strong></a>
+  </nav>
+</main>
+
+<footer>
+  <span>© 2026 Yap Kai Jun Ethan</span>
+  <div><a href="https://github.com/EthanYap123/portfolio" target="_blank" rel="noopener">Site source ↗</a><a href="#content">Back to top ↑</a></div>
+</footer>
+</body>
+</html>

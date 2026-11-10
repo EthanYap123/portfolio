@@ -4,17 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ethan Yap · Portfolio</title>
-<meta name="description" content="Ethan Yap — Year 2 IT student at Singapore Polytechnic seeking a software engineering internship. Nine projects with live demos: full-stack web apps, real-time dashboards, data pipelines and AI search.">
+<meta name="description" content="Ethan Yap — Year 2 IT student at Singapore Polytechnic seeking a software engineering internship. Ten projects, nine with live demos: full-stack web apps, real-time dashboards, data pipelines and AI search, with case studies and CI on every in-depth build.">
 <meta name="theme-color" content="#f5f2ec">
 <link rel="canonical" href="https://ethanyap123.github.io/portfolio/">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<script src="assets/ci-status.js" defer></script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Person","name":"Ethan Yap","alternateName":"Yap Kai Jun Ethan","url":"https://ethanyap123.github.io/portfolio/","image":"https://ethanyap123.github.io/portfolio/assets/ethan.jpg","email":"mailto:ethanyapschool@gmail.com","jobTitle":"Information Technology Student","affiliation":{"@type":"CollegeOrUniversity","name":"Singapore Polytechnic"},"address":{"@type":"PostalAddress","addressCountry":"SG"},"knowsLanguage":["English","Mandarin"],"sameAs":["https://github.com/EthanYap123","https://www.linkedin.com/in/yap-kai-jun-ethan/"]}
 </script>
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ethanyap123.github.io/portfolio/">
 <meta property="og:title" content="Ethan Yap · Portfolio">
-<meta property="og:description" content="Year 2 IT student at Singapore Polytechnic, seeking a software engineering internship. Nine projects with live demos: full-stack apps, real-time dashboards, data pipelines and AI search.">
+<meta property="og:description" content="Year 2 IT student at Singapore Polytechnic, seeking a software engineering internship. Ten projects, nine with live demos: full-stack apps, real-time dashboards, data pipelines and AI search.">
 <meta property="og:image" content="https://ethanyap123.github.io/portfolio/assets/og-preview.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -217,7 +218,13 @@ a.frame:hover img { transform: scale(1.02); }
 .lesson p:last-child { margin: 0; font-size: 15px; line-height: 1.6; color: var(--ink-2); text-wrap: pretty; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .tags li { font-family: var(--mono); font-size: 12px; padding: 6px 11px; background: var(--bg); border-radius: 999px; color: var(--ink-2); }
-.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ci-dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--faint); opacity: .45; transition: background .3s, opacity .3s; }
+.ci-pill[data-state="passing"] .ci-dot { background: var(--ok); opacity: 1; box-shadow: 0 0 0 3px oklch(0.65 0.16 150 / .2); }
+.ci-pill[data-state="failing"] .ci-dot { background: oklch(0.58 0.2 27); opacity: 1; box-shadow: 0 0 0 3px oklch(0.58 0.2 27 / .2); }
+.case-link { margin: 0 0 14px; font-size: 15px; font-weight: 500; }
+.case-link a { color: var(--accent-ink); border-bottom: 1px solid var(--accent-soft); }
+.case-link a:hover { color: var(--accent); border-color: var(--accent); }
 .build { grid-column: 1 / -1; align-self: stretch; border-top: 1px solid var(--line); }
 .feature .build { margin: 0 clamp(4px,1vw,12px); }
 .build summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0 6px; font-size: 15px; font-weight: 600; }
@@ -343,7 +350,7 @@ a.frame:hover img { transform: scale(1.02); }
 }
 .skill-name { font-size: 16px; font-weight: 500; }
 .proof { font-family: var(--mono); font-size: 11.5px; line-height: 1.5; color: var(--faint); }
-.proof a { color: var(--faint); border-bottom: 1px solid var(--line-2); white-space: nowrap; }
+.proof a { display: inline-block; padding: 4px 0; line-height: 16px; color: var(--faint); border-bottom: 1px solid var(--line-2); white-space: nowrap; }
 .proof a:hover { color: var(--accent); border-color: var(--accent); }
 .proof a + a::before { content: '·'; display: inline-block; margin: 0 7px; color: var(--faint); pointer-events: none; }
 .soft-head { display: flex; justify-content: space-between; align-items: baseline; gap: 4px 24px; flex-wrap: wrap; margin: 56px 0 20px; }
@@ -426,9 +433,9 @@ footer div { display: flex; gap: 20px; }
 <main>
   <section id="top" class="hero wrap" aria-label="Introduction">
     <div class="status"><span class="dot" aria-hidden="true"></span><span>Open to software engineering internships · <span class="status-dates">Mar 2027 – Jan 2028</span></span></div>
-    <h1>Ethan Yap builds <em>full-stack</em> web&nbsp;apps.</h1>
+    <h1>Ethan Yap builds and ships <em>full-stack</em> web&nbsp;apps.</h1>
     <div class="hero-copy">
-      <p class="lede">I’m a Year 2 IT student at Singapore Polytechnic. I build complete apps, from the database and API to the interface and deployment, with Node.js, Next.js, Python, PostgreSQL and Docker. Every web project below has a live demo you can open right now.</p>
+      <p class="lede">I’m a Year 2 IT student at Singapore Polytechnic who builds with Node.js, Next.js, Python and PostgreSQL, and ships with Docker and GitHub Actions to live demos you can open below.</p>
       <div class="ctas">
         <a href="#work" class="pill dark">See my work ↓</a>
         <a href="assets/Ethan-Yap-Resume.pdf" download="Ethan-Yap-Resume.pdf" class="pill light">Download resume ↓</a>
@@ -438,7 +445,7 @@ footer div { display: flex; gap: 20px; }
         </span>
       </div>
     </div>
-    <div class="deck" aria-label="Featured projects">
+    <div class="deck" role="group" aria-label="Featured projects">
       <a href="#p-trend"><img src="assets/trend-sentiment-tracker.jpg" alt="" width="800" height="500"><span>Trend Tracker</span></a>
       <a href="#p-pokemon"><img src="assets/pokemon-battle-system.jpg" alt="" width="800" height="500"><span>Pokémon Battle System</span></a>
       <a href="#p-incident"><img src="assets/incident-monitoring-dashboard.jpg" alt="" width="800" height="500"><span>Incident Monitor</span></a>
@@ -501,9 +508,10 @@ footer div { display: flex; gap: 20px; }
       <div class="about-copy">
         <span class="label">About me</span>
         <h2 class="h2" id="about-title">Hi, I’m Ethan.</h2>
-        <p>I’m a Year 2 Information Technology student at Singapore Polytechnic, minoring in Business. I got into programming through robotics. It earned me a Direct School Admission place at Maris Stella High School, where I went on to mentor juniors in the Robotics &amp; Programming Club and win a Merit Award at an international coding competition.</p>
-        <p>Now I like owning a project end to end: designing the database, writing the API, making the interface clear and getting it live where people can use it. I also go back to my older school projects and rebuild them properly, fixing the security gaps, hard-coded values and accessibility issues I didn’t know about in Year 1.</p>
-        <p>Away from the keyboard, I’ve worked part-time on busy kitchen lines, emceed school events and volunteered at community events with 100+ participants.</p>
+        <p>I’m a Year 2 Information Technology student at Singapore Polytechnic, minoring in Business. I’ve been building things since primary school, when I started robotics, and robotics is what earned me a Direct School Admission place at Maris Stella High School.</p>
+        <p>There I mentored juniors in the Robotics &amp; Programming Club and represented the school at the international Perse Coding Team Challenge, earning a Merit Award in 2023. Helping other people get their code working is when I knew I wanted to go into software development.</p>
+        <p>Now I build full apps end to end: designing the database, writing the API, making the interface clear and getting it live where people can use it. I also go back to my Year 1 projects and rebuild them properly, fixing the security gaps and shortcuts I didn’t know to look for back then.</p>
+        <p>Away from the keyboard, I’ve worked part-time on busy kitchen lines, emceed school events and volunteered at community events of 100+ people.</p>
         <dl class="about-facts">
           <div><dt>Based in</dt><dd>Singapore</dd></div>
           <div><dt>Studying</dt><dd>Diploma in IT, Year 2</dd></div>
@@ -574,7 +582,7 @@ footer div { display: flex; gap: 20px; }
             <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Snippet Hub</strong><span>73 tests, alongside type checking and linting</span><em class="ci-state">passed</em></li>
             <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Pokémon</strong><span>20 API tests against a real PostgreSQL</span><em class="ci-state">passed</em></li>
             <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>RAG Search</strong><span>26 pytest tests for ingestion, retrieval, answers and the API</span><em class="ci-state">passed</em></li>
-            <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Trend Tracker</strong><span>18 pytest tests, including a parity test of the dashboard’s JavaScript against the Python analytics</span><em class="ci-state">passed</em></li>
+            <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Trend Tracker</strong><span>26 pytest tests, including a parity test of the dashboard’s JavaScript against the Python analytics</span><em class="ci-state">passed</em></li>
             <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Incident Monitor</strong><span>15 unit tests for the alert engine and telemetry simulator</span><em class="ci-state">passed</em></li>
             <li data-state="passed"><span class="ci-mark" aria-hidden="true"></span><strong>Incident Monitor</strong><span>A smoke test that boots all five containers with Docker Compose</span><em class="ci-state">passed</em></li>
           </ol>
@@ -700,10 +708,11 @@ footer div { display: flex; gap: 20px; }
 <script>
 // featured: true shows the project as a large card; the rest go under "More projects".
 // built: [heading, detail] pairs for "How I built it". stats: [value, label] pairs.
+// case: the project's case study page. ci: 'repo/actions/workflows/file.yml', shown as a live status badge.
 const PROJECTS = [
   { id: 'pokemon', short: 'Pokémon', featured: true, title: 'Pokémon Gym & Battle System', kind: 'Year 1 school project, rebuilt', tags: ['fullstack'],
     summary: 'Full-stack Pokémon game with turn-based gym battles, a gacha shop and a REST API over PostgreSQL, live on Vercel with Neon. A one-click demo login lets visitors play without signing up.',
-    stats: [['45', 'REST API endpoints'], ['20', 'API tests run in CI'], ['1,000s', 'of simulated battles to balance the gyms']],
+    stats: [['49', 'REST API endpoints'], ['20', 'API tests run in CI'], ['1,000s', 'of simulated battles to balance the gyms']],
     lesson: 'Logging in isn’t the same as being allowed.',
     learned: 'My Year 1 version only checked that a token was valid, not whose it was, so I added ownership checks to every player route and ran each purchase as one database transaction.',
     built: [
@@ -713,6 +722,7 @@ const PROJECTS = [
     ],
     stack: ['Node.js','Express','PostgreSQL','JWT','bcrypt','Vercel','Neon','GitHub Actions'],
     img: 'assets/pokemon-battle-system.jpg', alt: 'Battle screen with Charmander facing Brock’s Geodude, HP bars, a battle log and the move menu',
+    case: 'work/pokemon.html', ci: 'pokemon-gamified-battle-system/actions/workflows/ci.yml',
     repo: 'https://github.com/EthanYap123/pokemon-gamified-battle-system', live: 'https://pokemon-gamified-battle-system-eta.vercel.app/', demo: 'https://ethanyap123.github.io/pokemon-gamified-battle-system/' },
 
   { id: 'incident', short: 'Incident Monitor', featured: true, title: 'Incident Monitoring Dashboard', kind: 'Personal project', tags: ['fullstack'],
@@ -727,6 +737,7 @@ const PROJECTS = [
     ],
     stack: ['Docker Compose','Node.js','PostgreSQL','WebSockets','Next.js','Tailwind CSS','GitHub Actions'],
     img: 'assets/incident-monitoring-dashboard.jpg', alt: 'Dark dashboard with four service health cards, live CPU and memory charts, chaos controls and alert thresholds',
+    case: 'work/incident.html', ci: 'incident-monitoring-dashboard/actions/workflows/ci.yml',
     repo: 'https://github.com/EthanYap123/incident-monitoring-dashboard', live: 'https://ethanyap123.github.io/incident-monitoring-dashboard/' },
 
   { id: 'snippet', short: 'Snippet Hub', featured: true, title: 'AI Code Snippet & Documentation Hub', kind: 'Personal project', tags: ['fullstack','ai'],
@@ -741,6 +752,7 @@ const PROJECTS = [
     ],
     stack: ['Next.js 16','TypeScript','PostgreSQL','pgvector','Gemini API','Vercel','Neon','Zod'],
     img: 'assets/ai-code-snippet-hub.jpg', alt: 'Snippet library searched for “how to connect to a database”, showing two matching snippets with match scores',
+    case: 'work/snippet.html', ci: 'ai-code-snippet-hub/actions/workflows/ci.yml',
     repo: 'https://github.com/EthanYap123/ai-code-snippet-hub', live: 'https://ai-code-snippet-hub.vercel.app/', demo: 'https://ethanyap123.github.io/ai-code-snippet-hub/' },
 
   { id: 'rag', short: 'RAG Search', featured: true, title: 'Academic Resource RAG Search Engine', kind: 'Personal project', tags: ['fullstack','ai'],
@@ -755,6 +767,7 @@ const PROJECTS = [
     ],
     stack: ['Python','FastAPI','ChromaDB','Sentence embeddings','Gemini API','pypdf','transformers.js','pytest'],
     img: 'assets/academic-rag-search.jpg', alt: 'Answer to “What happens if I miss an exam because I was sick?” with numbered citations beside highlighted source passages',
+    case: 'work/rag.html', ci: 'academic-rag-search/actions/workflows/ci.yml',
     repo: 'https://github.com/EthanYap123/academic-rag-search', live: 'https://ethanyap123.github.io/academic-rag-search/' },
 
   { id: 'trend', short: 'Trend Tracker', featured: true, title: 'Tech Trend Sentiment Tracker', kind: 'Personal project', tags: ['data','fullstack'],
@@ -769,6 +782,7 @@ const PROJECTS = [
     ],
     stack: ['Python','pandas','SQLite','FastAPI','APScheduler','Next.js','Recharts','GitHub Actions'],
     img: 'assets/trend-sentiment-tracker.jpg', alt: 'Sentiment dashboard with KPI cards, a sentiment-over-time chart, daily volume by polarity and a list of top trending keywords',
+    case: 'work/trend.html', ci: 'trend-sentiment-tracker/actions/workflows/pipeline.yml',
     repo: 'https://github.com/EthanYap123/trend-sentiment-tracker', live: 'https://ethanyap123.github.io/trend-sentiment-tracker/' },
 
   { id: 'steady', short: 'Steady', title: 'Steady: Weight & Calorie Tracker', kind: 'Personal project', tags: ['fullstack'],
@@ -782,6 +796,7 @@ const PROJECTS = [
     ],
     stack: ['Node.js','Express','PostgreSQL','JWT','bcrypt','Vercel','Neon','PWA','node:test'],
     img: 'assets/calorie-weight-tracker.jpg', alt: 'Today view with a calorie ring showing 1,038 kcal left and breakfast entries logged by amount, such as 1 glass (250 ml) of low fat milk',
+    ci: 'calorie-weight-tracker/actions/workflows/ci.yml',
     repo: 'https://github.com/EthanYap123/calorie-weight-tracker', live: 'https://calorie-weight-tracker.vercel.app/', demo: 'https://ethanyap123.github.io/calorie-weight-tracker/?demo' },
 
   { id: 'mylearning', short: 'MyLearningAI', title: 'MyLearningAI Study App', kind: 'Group project', tags: ['frontend'],
@@ -796,6 +811,7 @@ const PROJECTS = [
     ],
     stack: ['JavaScript','HTML','CSS','localStorage','Figma','UX research'],
     img: 'assets/mylearningai-study-app.jpg', alt: 'Three phone screens: the home menu, a performance dashboard and a concept link map',
+    ci: 'student-study-planner/actions/workflows/ci.yml',
     repo: 'https://github.com/EthanYap123/student-study-planner', live: 'https://ethanyap123.github.io/student-study-planner/' },
 
   { id: 'retail', short: 'Retail App', title: 'Retail Transaction Web App', kind: 'Year 1 school project, rebuilt', tags: ['data','frontend'],
@@ -809,6 +825,7 @@ const PROJECTS = [
     ],
     stack: ['JavaScript','Chart.js','Web Components','Node.js','Express','GitHub Actions'],
     img: 'assets/retail-transaction-webapp.jpg', alt: 'Sales overview with revenue, transaction and customer KPI cards above a revenue-by-month line chart',
+    ci: 'retail-transaction-webapp/actions/workflows/ci.yml',
     repo: 'https://github.com/EthanYap123/retail-transaction-webapp', live: 'https://ethanyap123.github.io/retail-transaction-webapp/' },
 
   { id: 'internship', short: 'Internship App', title: 'Student Internship Management System', kind: 'Pair project', tags: ['java'],
@@ -823,6 +840,7 @@ const PROJECTS = [
     ],
     stack: ['Java','OOP','Swing','NetBeans'],
     img: 'assets/internship-management-system.jpg', alt: 'Swing enquiry screen showing a student’s placement details, score badge and a company summary of assigned students',
+    ci: 'internship-management-system/actions/workflows/ci.yml',
     repo: 'https://github.com/EthanYap123/internship-management-system' },
 
   { id: 'wellness', short: 'Wellness Hub', title: 'Mental Wellness Hub', kind: 'Year 1 school project, rebuilt', tags: ['frontend'],
@@ -836,6 +854,7 @@ const PROJECTS = [
     ],
     stack: ['HTML','CSS','Bootstrap 5','JavaScript','localStorage'],
     img: 'assets/mental-wellness-hub.jpg', alt: 'Home page reading “Take a breath. You’re in the right place.” beside a day-at-a-glance card with mood, streak and journal counts',
+    ci: 'mental-wellness-hub/actions/workflows/ci.yml',
     repo: 'https://github.com/EthanYap123/mental-wellness-hub', live: 'https://ethanyap123.github.io/mental-wellness-hub/' },
 ];
 
@@ -896,11 +915,14 @@ const actions = p => `<div class="actions">
     ${p.live ? `<a class="pill dark btn" href="${esc(p.live)}" ${ext}>${p.demo ? 'Live app' : 'Live demo'} ↗</a>` : ''}
     ${p.demo ? `<a class="pill light btn" href="${esc(p.demo)}" ${ext}>Browser demo ↗</a>` : ''}
     ${p.repo ? `<a class="pill light btn" href="${esc(p.repo)}" ${ext}>Source code ↗</a>` : ''}
+    ${p.case ? `<a class="pill light btn" href="${esc(p.case)}">Case study →</a>` : ''}
+    ${p.ci ? `<a class="pill light btn ci-pill" data-ci="${esc(p.ci)}" href="https://github.com/EthanYap123/${esc(p.ci)}" ${ext} title="Latest GitHub Actions run on main"><span class="ci-dot" aria-hidden="true"></span><span class="ci-text">CI</span> ↗</a>` : ''}
   </div>`;
 const build = p => `
   <details class="build">
     <summary><span>How I built it <span class="hint">· ${p.built.map(b => esc(b[0])).join(', ')}</span></span><span class="plus" aria-hidden="true"></span></summary>
     <ol class="steps">${p.built.map(([h, t]) => `<li><h4>${esc(h)}</h4><p>${esc(t)}</p></li>`).join('')}</ol>
+    ${p.case ? `<p class="case-link"><a href="${esc(p.case)}">Read the full case study: the problem, architecture, the hardest decision and how it ships →</a></p>` : ''}
   </details>`;
 
 document.getElementById('featured').innerHTML = PROJECTS.filter(p => p.featured).map((p, i) => `
