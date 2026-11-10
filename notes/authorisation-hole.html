@@ -36,24 +36,23 @@
   <p class="crumbs"><a href="./">Notes</a> / Pokémon API</p>
   <article>
     <header class="cs-head">
-      <span class="label"><time datetime="2026-11-10">10 Nov 2026</time> · 4 min read</span>
+      <span class="label"><time datetime="2026-11-10">10 Nov 2026</time> · 3 min read</span>
       <h1>How I fixed the authorisation hole in my Pokémon API</h1>
-      <p class="lede">My Year 1 API checked that you were logged in. It never checked who you were.</p>
+      <p class="lede">My Year 1 API checked if you were logged in, but not who you were.</p>
     </header>
 
     <div class="prose note-body">
-      <p>In Year 1 I built a Pokémon battle game for my Back-End Development module: an Express REST API over MySQL, with JWT login and bcrypt password hashing. It did what the assignment asked. I came back to it in October 2026, when I decided to put it online for anyone to play.</p>
-      <p>Putting something on the public internet changes the question you ask of the code. In a demo, the only user is you. On a shared server, any request might come from someone poking at it to see what breaks. So before deploying, I went back through the routes.</p>
+      <p>In Year 1, I made a Pokémon battle game for my Back-End Development module. It was a REST API in Express with MySQL, with JWT login and bcrypt for passwords. It worked fine for the assignment. In October 2026 I wanted to put it online so anyone could play it, so I went back through the code first.</p>
 
-      <h2>The hole</h2>
-      <p>Most player routes looked like this:</p>
+      <h2>The problem</h2>
+      <p>Most of the player routes looked like this:</p>
 <pre><code>router.post('/:user_id/purchase', jwtMiddleware.verifyToken, shopController.purchaseItem);</code></pre>
-      <p><code>verifyToken</code> did its job. It rejected missing or forged tokens and stored the caller’s id in <code>res.locals.userId</code>. But the controller then used <code>req.params.user_id</code>, the number in the URL, and nothing compared the two. A player logged in as user 2 could call <code>/api/shop/7/purchase</code> and spend user 7’s coins. The team routes had the same pattern, so you could rearrange someone else’s team too.</p>
-      <p>There was a second problem in the same spirit. The end-battle endpoint read <code>result</code> from the request body, so a client could simply say it had won and collect the gym reward as often as it liked. And any logged-in player could create or delete gyms.</p>
-      <p>None of this showed up when I tested through the app’s own pages, because they always sent the right id. These bugs only appear once you stop trusting the client.</p>
+      <p><code>verifyToken</code> checked that the token was real. But the controller used the <code>user_id</code> from the URL, and nothing checked that it matched the person logged in. So if I was logged in as user 2, I could call <code>/api/shop/7/purchase</code> and spend user 7’s coins. The team routes had the same problem.</p>
+      <p>There were other problems too. When a battle ended, the server took the result from the request, so you could just send <code>"result": "win"</code> and get the gym reward as many times as you wanted. Any logged-in player could also create or delete gyms.</p>
+      <p>I never noticed any of this when testing, because my own pages always sent the right id. It only breaks when someone sends requests on purpose.</p>
 
-      <h2>The fix</h2>
-      <p>I added a small middleware that runs after <code>verifyToken</code>. It compares the account in the URL or body with the account in the token and answers <code>403</code> if they differ:</p>
+      <h2>How I fixed it</h2>
+      <p>I added a middleware called <code>verifyOwner</code> that runs after <code>verifyToken</code>. It checks that the <code>user_id</code> in the request is the same as the one in the token, and returns <code>403</code> if not:</p>
 <pre><code>module.exports.verifyOwner = (req, res, next) =&gt; {
   const requestedId = req.params.user_id ?? req.body.user_id;
   if (parseInt(requestedId) !== res.locals.userId) {
@@ -61,15 +60,15 @@
   }
   next();
 };</code></pre>
-      <p>It now guards the shop, team, Pokédex and owned-Pokémon routes. Battles are loaded by both their id and the caller’s id, so a battle that isn’t yours simply isn’t found. Routes that change shared game data need an admin id from <code>ADMIN_USER_IDS</code>, and nobody is an admin unless that is set. The server now decides who won, and a reward needs a won, unclaimed battle that belongs to you.</p>
+      <p>I put it on the shop, team, Pokédex and owned-Pokémon routes. Battles are now looked up by the battle id and the user id together, so you can’t touch someone else’s battle. Routes that change gyms, badges or Pokémon need an admin id from <code>ADMIN_USER_IDS</code>. The server now decides who won, and you only get a reward for a battle you actually won and haven’t claimed yet.</p>
 
-      <h2>Keeping it fixed</h2>
-      <p>A fix without a test can quietly come back. When I added an API test suite, several of its 20 tests exist only to attack these rules: one trainer’s token can’t buy, pick a starter or read a profile on another trainer’s account, only admins can change gyms, and a reward is never paid without a won battle, never twice and never for someone else’s win. They run in GitHub Actions against a real PostgreSQL database on every push and pull request.</p>
+      <h2>Making sure it stays fixed</h2>
+      <p>Later I added 20 API tests, and some of them only test these rules: you can’t buy, pick a starter or view a profile on someone else’s account, only admins can change gyms, and rewards are never paid without a win, never twice and never for someone else’s win. They run in GitHub Actions on every push and pull request, against a real PostgreSQL database.</p>
 
-      <h2>What I took from it</h2>
-      <p>Authentication answers “who are you?”. Authorisation answers “are you allowed to do this?”. My Year 1 code only asked the first question. Now, whenever I write a route that takes an id, I ask where that id comes from and whether the caller owns it, and I write the test that tries the wrong one.</p>
-      <p>One loose end is left: the profile update and delete routes still check ownership inside the controller instead of using the middleware. They’re protected, but I’d like every rule in one place.</p>
-      <p>The full write-up, with the architecture and the purchase transaction, is in the <a href="../work/pokemon.html">Pokémon case study</a>.</p>
+      <h2>What I learned</h2>
+      <p>Before this I didn’t really get the difference between authentication and authorisation. Authentication is checking who you are. Authorisation is checking if you’re allowed to do something. My Year 1 code only did the first one. Now whenever a route takes an id, I check where it comes from and whether the user owns it, and I write a test that tries a wrong id.</p>
+      <p>There’s still one thing I want to clean up: the profile update and delete routes check ownership inside the controller instead of using the middleware. They’re still protected, but I’d rather have all the checks in one place.</p>
+      <p>The full write-up is in the <a href="../work/pokemon.html">Pokémon case study</a>.</p>
     </div>
   </article>
 

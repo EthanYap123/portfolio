@@ -36,33 +36,33 @@
   <p class="crumbs"><a href="./">Notes</a> / Year 1 rebuilds</p>
   <article>
     <header class="cs-head">
-      <span class="label"><time datetime="2026-11-10">10 Nov 2026</time> · 4 min read</span>
+      <span class="label"><time datetime="2026-11-10">10 Nov 2026</time> · 3 min read</span>
       <h1>Rebuilding my Year 1 projects properly</h1>
-      <p class="lede">Three of my Year 1 projects passed their assignments. None of them were ready for real users. Here’s what was wrong and what I changed.</p>
+      <p class="lede">Three of my Year 1 projects passed, but they weren’t ready for real people to use. Here’s what was wrong and how I fixed them.</p>
     </header>
 
     <div class="prose note-body">
-      <p>In October 2026 I wanted every web project on my portfolio to have a live demo. That meant opening up code I’d written a year earlier and looking at it the way a stranger would. It was humbling. The problems weren’t exotic: they were the shortcuts you take when the only person using the app is you, the night before a deadline.</p>
+      <p>In October 2026 I wanted every web project on my portfolio to have a live demo. That meant going back to code I wrote a year ago and actually looking at it properly. Most of the problems weren’t complicated. They were shortcuts I took because I was the only one using the app.</p>
 
-      <h2>Pokémon battle API: trusting the client</h2>
-      <p>The API checked that a request had a valid login token but never checked whose it was, so any player could spend another player’s coins by changing the id in the URL. The client also told the server who won each battle, so gym rewards could be claimed for free and more than once. A purchase ran as several separate queries, so a failure halfway through could take the coins without giving the Pokémon.</p>
-      <p>The fixes: an ownership check on every player route, battle results decided on the server, rewards only for a won and unclaimed battle, and each purchase run as one database transaction that locks the player’s row. I also moved it from MySQL to PostgreSQL, deployed it on Vercel with Neon, and added 20 API tests that run in CI. I wrote that part up in <a href="authorisation-hole.html">a separate note</a>.</p>
+      <h2>Pokémon battle API</h2>
+      <p>Any logged-in player could spend another player’s coins just by changing the id in the URL. The client also told the server who won a battle, so you could claim gym rewards without fighting, more than once. Buying something ran as a few separate queries, so if one failed halfway you could lose your coins and not get the Pokémon.</p>
+      <p>I added an ownership check on every player route, made the server decide who wins, and made each purchase run as one database transaction. I also moved it from MySQL to PostgreSQL, put it on Vercel with Neon, and added 20 API tests that run in CI. I wrote more about the first fix in <a href="authorisation-hole.html">another note</a>.</p>
 
-      <h2>Retail dashboard: hard-coding everything</h2>
-      <p>The front end called a fixed address, <code>http://localhost:8081</code>, so it only worked on my laptop. The payment methods were a hard-coded list, so the page broke as soon as the data held one I hadn’t typed in. On the server, the CSV path only worked from one folder, some number columns were read as text, and a failed load left the server half-started instead of stopping with a clear error.</p>
-      <p>Now the payment methods come from the data, every value is escaped before it goes into the page, and the CSV path works from anywhere. The biggest change was dropping the need for a server at all: a build step packs all 100,000 transactions into a compact JSON file, and a GitHub Actions workflow builds it and deploys the dashboard to GitHub Pages.</p>
+      <h2>Retail dashboard</h2>
+      <p>The front end called <code>http://localhost:8081</code>, so it only worked on my laptop. The payment methods were a hard-coded list, so the page broke if the data had one I didn’t type in. On the server, the CSV path only worked from one folder, some numbers were read as text, and if loading failed the server kept running half-broken.</p>
+      <p>Now the payment methods come from the data, all values are escaped before they go into the page, and the CSV path works from anywhere. The biggest change was removing the server completely: a build step packs all 100,000 transactions into one JSON file, and GitHub Actions builds it and deploys the dashboard to GitHub Pages.</p>
 
-      <h2>Mental Wellness Hub: the small things</h2>
-      <p>Every page threw console errors, because one shared script assumed every page had every element. The tips carousel had two active slides, the favicon was missing, the navigation overflowed on phones, and the gratitude journal put whatever you typed straight into the page without escaping it.</p>
-      <p>I split the script per page so each one checks before it runs, escaped user input, and then did the accessibility work I’d skipped entirely in Year 1: labelled controls, live regions, visible focus styles and reduced-motion support. I checked every page at 375 px, 768 px and desktop widths, in light and dark mode.</p>
+      <h2>Mental Wellness Hub</h2>
+      <p>Every page had console errors because one shared script expected every page to have the same elements. The carousel had two active slides, the favicon was missing, the nav overflowed on phones, and the journal showed whatever you typed straight on the page without escaping it.</p>
+      <p>I split the script so each page has its own, escaped user input, and did the accessibility stuff I skipped in Year 1: labels on controls, live regions, focus styles and reduced motion. Then I checked every page at phone, tablet and desktop sizes, in light and dark mode.</p>
 
-      <h2>What the three had in common</h2>
+      <h2>What they had in common</h2>
       <ul>
-        <li><strong>Trusting input.</strong> An id in a URL, a battle result from the client, text in a journal: all of it needs checking or escaping before it’s used.</li>
-        <li><strong>Hard-coding what the data can tell you.</strong> Addresses, payment lists and file paths were all fine on my machine and wrong everywhere else.</li>
-        <li><strong>Never running it anywhere else.</strong> Each problem was easy to miss until the app had to work on someone else’s screen.</li>
+        <li><strong>I trusted input I shouldn’t have.</strong> An id in the URL, a battle result from the client, text in a journal.</li>
+        <li><strong>I hard-coded things the data could tell me,</strong> like addresses, payment lists and file paths.</li>
+        <li><strong>I never ran them anywhere except my own computer.</strong></li>
       </ul>
-      <p>The habit I’ve kept is to deploy early and test like a stranger. If I were starting these projects again, I’d also write the tests first. In the Pokémon rebuild the tests came a week after the fixes, and they’re the only thing that stops the same holes from coming back.</p>
+      <p>What I do now is deploy early and test it like someone else would. If I did these again, I’d also write tests from the start. For Pokémon I only added tests a week after the fixes, and they’re what stops the same bugs from coming back.</p>
     </div>
   </article>
 
