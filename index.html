@@ -8,6 +8,7 @@
 <meta name="theme-color" content="#f5f2ec">
 <link rel="canonical" href="https://ethanyap123.github.io/portfolio/">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<script src="assets/ci-status.js" defer></script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Person","name":"Ethan Yap","alternateName":"Yap Kai Jun Ethan","url":"https://ethanyap123.github.io/portfolio/","image":"https://ethanyap123.github.io/portfolio/assets/ethan.jpg","email":"mailto:ethanyapschool@gmail.com","jobTitle":"Information Technology Student","affiliation":{"@type":"CollegeOrUniversity","name":"Singapore Polytechnic"},"address":{"@type":"PostalAddress","addressCountry":"SG"},"knowsLanguage":["English","Mandarin"],"sameAs":["https://github.com/EthanYap123","https://www.linkedin.com/in/yap-kai-jun-ethan/"]}
 </script>
@@ -218,8 +219,9 @@ a.frame:hover img { transform: scale(1.02); }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .tags li { font-family: var(--mono); font-size: 12px; padding: 6px 11px; background: var(--bg); border-radius: 999px; color: var(--ink-2); }
 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.ci-badge { display: inline-flex; padding: 4px; border-radius: 6px; }
-.ci-badge img { display: block; height: 20px; width: auto; }
+.ci-dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--faint); opacity: .45; transition: background .3s, opacity .3s; }
+.ci-pill[data-state="passing"] .ci-dot { background: var(--ok); opacity: 1; box-shadow: 0 0 0 3px oklch(0.65 0.16 150 / .2); }
+.ci-pill[data-state="failing"] .ci-dot { background: oklch(0.58 0.2 27); opacity: 1; box-shadow: 0 0 0 3px oklch(0.58 0.2 27 / .2); }
 .case-link { margin: 0 0 14px; font-size: 15px; font-weight: 500; }
 .case-link a { color: var(--accent-ink); border-bottom: 1px solid var(--accent-soft); }
 .case-link a:hover { color: var(--accent); border-color: var(--accent); }
@@ -913,7 +915,7 @@ const actions = p => `<div class="actions">
     ${p.demo ? `<a class="pill light btn" href="${esc(p.demo)}" ${ext}>Browser demo ↗</a>` : ''}
     ${p.repo ? `<a class="pill light btn" href="${esc(p.repo)}" ${ext}>Source code ↗</a>` : ''}
     ${p.case ? `<a class="pill light btn" href="${esc(p.case)}">Case study →</a>` : ''}
-    ${p.ci ? `<a class="ci-badge" href="https://github.com/EthanYap123/${esc(p.ci)}" ${ext}><img src="https://github.com/EthanYap123/${esc(p.ci)}/badge.svg" alt="${esc(p.short)} CI status" height="20" loading="lazy" decoding="async"></a>` : ''}
+    ${p.ci ? `<a class="pill light btn ci-pill" data-ci="${esc(p.ci)}" href="https://github.com/EthanYap123/${esc(p.ci)}" ${ext} title="Latest GitHub Actions run on main"><span class="ci-dot" aria-hidden="true"></span><span class="ci-text">CI</span> ↗</a>` : ''}
   </div>`;
 const build = p => `
   <details class="build">
